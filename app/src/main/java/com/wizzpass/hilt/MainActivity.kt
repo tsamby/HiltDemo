@@ -3,7 +3,6 @@ package com.wizzpass.hilt
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.wizzpass.hilt.ui.login.GuardLoginFragment
-import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.util.replaceFragmentWithNoHistory
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -9,12 +9,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
+import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.util.replaceFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_guard_login.*
 
 /**
  * Created by novuyo on 20,September,2020
  */
+@AndroidEntryPoint
 class GuardLoginFragment : Fragment(), LifecycleOwner {
 
     private var guardView : View? = null
@@ -38,12 +41,16 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         super.onViewCreated(view, savedInstanceState)
         this.lifecycle.addObserver(guardLoginViewModel)
         buttonLogin.setOnClickListener {
-            launchRegisterResidentFragment()
+            launchSearchResidentFragment()
         }
     }
 
     fun launchRegisterResidentFragment(){
         activity?.replaceFragment(ResidentRegisterFragment(), mContainerId)
+    }
+
+    fun launchSearchResidentFragment(){
+        activity?.replaceFragment(SearchFragment(), mContainerId)
     }
 
 }

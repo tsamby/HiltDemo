@@ -7,27 +7,28 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.wizzpass.hilt.db.entity.Guard
 import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.db.repository.GuardDBRepository
 import com.wizzpass.hilt.db.repository.ResidentDBRepository
 import kotlinx.coroutines.launch
 
 /**
  * Created by novuyo on 20,September,2020
  */
-public class GuardLoginViewModel @ViewModelInject constructor(private val residentDBRepository: ResidentDBRepository) :
+public class GuardLoginViewModel @ViewModelInject constructor(private val guardDBRepository: GuardDBRepository) :
     ViewModel(), LifecycleObserver {
 
     private  val insertedId =  MutableLiveData<Long>()
     private val  error = MutableLiveData<String>()
-    var residentFinalList: LiveData<MutableList<Resident>> = MutableLiveData<MutableList<Resident>>()
+    var residentFinalList: LiveData<MutableList<Guard>> = MutableLiveData<MutableList<Guard>>()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun fetchResidentData(){
         viewModelScope.launch {
-            residentFinalList = residentDBRepository.fetchResidents()
+            //residentFinalList = guardDBRepository.fetchGuards()
         }
     }
 
-    fun insertResidentInfo(resident: Resident) {
+    /*fun insertGuardInfo(guard: Guard) {
         viewModelScope.launch {
             if(resident.fName.isNullOrEmpty() ||
                 resident.lname.isNullOrEmpty() ||
@@ -35,11 +36,13 @@ public class GuardLoginViewModel @ViewModelInject constructor(private val reside
                 resident.address.isNullOrEmpty() ){
                 error.postValue( "Input Fields cannot be Empty")
             }else{
-                val resId: Long = residentDBRepository.insertResidentData(resident)
+                val resId: Long = guardDBRepository.insertGuardData(resident)
                 insertedId.postValue(resId)
             }
         }
     }
+
+     */
 
     fun fetchError(): LiveData<String> = error
 

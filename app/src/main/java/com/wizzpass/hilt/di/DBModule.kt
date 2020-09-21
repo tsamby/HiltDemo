@@ -1,9 +1,13 @@
 package com.wizzpass.hilt.di
 
 import android.content.Context
+import com.mindorks.paracamera.Camera
 import com.wizzpass.hilt.db.ResidentDB
+import com.wizzpass.hilt.db.dao.GuardDao
 import com.wizzpass.hilt.db.dao.ResidentDao
+import com.wizzpass.hilt.db.repository.GuardDBRepository
 import com.wizzpass.hilt.db.repository.ResidentDBRepository
+import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,10 +22,23 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 object DBModule {
 
     @Provides
-    fun provideStudentDao(@ApplicationContext appContext: Context) : ResidentDao {
+    fun provideResidentDao(@ApplicationContext appContext: Context) : ResidentDao {
         return ResidentDB.getInstance(appContext).residentDao
     }
 
     @Provides
-    fun provideStudentDBRepository(residentDao: ResidentDao) = ResidentDBRepository(residentDao)
+    fun provideResidentDBRepository(residentDao: ResidentDao) = ResidentDBRepository(residentDao)
+
+    @Provides
+    fun provideGuardDao(@ApplicationContext appContext: Context) : GuardDao {
+        return ResidentDB.getInstance(appContext).guardDao
+    }
+
+    @Provides
+    fun provideGuardDBRepository(guardDao: GuardDao) = GuardDBRepository(guardDao)
+
+
+
+
+
 }
