@@ -19,11 +19,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /*val addresses: ArrayList<ResAddress> = ArrayList<ResAddress>()
-        addresses.add(ResAddress(0, "10 Bramley"))
-        addresses.add(ResAddress(1, "11 Bramley"))
-        addresses.add(ResAddress(2, "12 Bramley"))
-        */
         fetchDataFromViewModel()
         replaceFragmentWithNoHistory(GuardLoginFragment(), R.id.container_fragment)
     }

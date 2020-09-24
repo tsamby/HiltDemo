@@ -13,6 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.mindorks.paracamera.Camera
 import com.wizzpass.hilt.R
+import com.wizzpass.hilt.db.entity.Guard
+import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.util.getStringImage
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +29,8 @@ import java.security.cert.Extension
 class ResidentRegisterFragment  : Fragment(){
 
     private val registerViewModel : RegisterViewModel by viewModels()
+    private val resAddressViewModel : ResAddressViewModel by viewModels ()
+
     private var residentInfoView : View? = null
     var mContainerId:Int = -1
     lateinit var camera:Camera
@@ -49,6 +53,10 @@ class ResidentRegisterFragment  : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val resAddress = getResAddressDetails()
+        resAddressViewModel.insertResidentInfo(resAddress)
+
         bt_register.setOnClickListener {
             val resident = getEnteredResidentDetails()
             registerViewModel.insertResidentInfo(resident)
@@ -97,11 +105,16 @@ class ResidentRegisterFragment  : Fragment(){
             et_address.text.toString(),
             et_name.text.toString(),
             et_surname.text.toString(),
-
-
             getStringImage(bmprofile),getStringImage(bmCar)
         )
 
+    }
+
+    fun getResAddressDetails() : ResAddress {
+        return ResAddress(
+            0L,
+            "362 Ferndale Randburg"
+        )
     }
 
 
@@ -161,4 +174,7 @@ class ResidentRegisterFragment  : Fragment(){
         super.onDestroy()
         camera.deleteImage()
     }
+
+
+
 }

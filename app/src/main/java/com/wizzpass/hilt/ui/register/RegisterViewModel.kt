@@ -2,7 +2,9 @@ package com.wizzpass.hilt.ui.register
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.db.repository.ResAddressDBRepository
 import com.wizzpass.hilt.db.repository.ResidentDBRepository
 import kotlinx.coroutines.launch
 
@@ -39,6 +41,16 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
             }
         }
     }
+
+   /* fun insertAddressInfo(resAddress: ResAddress) {
+        viewModelScope.launch {
+                val resId: Long = resAddressDBRepository.insertResAddressData(resAddress)
+                insertedId.postValue(resId)
+
+        }
+    }
+
+    */
 
     fun fetchResidentByCarReg(searchField : String){
         viewModelScope.launch {

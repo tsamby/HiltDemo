@@ -14,5 +14,5 @@ data class ResAddress (
     val resAdrressId : Long = 0L,
 
     @ColumnInfo(name = "address")
-    val ResAddress : String
+    val resAddress : String
 )

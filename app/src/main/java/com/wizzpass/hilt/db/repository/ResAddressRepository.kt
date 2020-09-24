@@ -18,4 +18,6 @@ class ResAddressDBRepository  @Inject constructor(private val addressDao: ResAdd
     suspend fun  fetchAddresses() = addressDao.fetch()
 
     suspend fun  fetchAddresse(searchField : String) = addressDao.fetchAddress(searchField)
+
+
 }
