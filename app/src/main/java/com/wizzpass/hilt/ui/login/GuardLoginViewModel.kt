@@ -19,30 +19,44 @@ public class GuardLoginViewModel @ViewModelInject constructor(private val guardD
 
     private  val insertedId =  MutableLiveData<Long>()
     private val  error = MutableLiveData<String>()
-    var residentFinalList: LiveData<MutableList<Guard>> = MutableLiveData<MutableList<Guard>>()
+    private val  numberOfGuards  = MutableLiveData<Int>()
+    var guardFinalList: LiveData<MutableList<Guard>> = MutableLiveData<MutableList<Guard>>()
+    var guardFound : LiveData<Guard> = MutableLiveData<Guard>()
+
+
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun fetchResidentData(){
+    fun fetchAllGuards(){
         viewModelScope.launch {
-            //residentFinalList = guardDBRepository.fetchGuards()
+            guardFinalList = guardDBRepository.fetchGuards()
         }
     }
 
-    /*fun insertGuardInfo(guard: Guard) {
+    fun fetchGuardByPasword(password : String){
         viewModelScope.launch {
-            if(resident.fName.isNullOrEmpty() ||
-                resident.lname.isNullOrEmpty() ||
-                resident.carReg.isNullOrEmpty() ||
-                resident.address.isNullOrEmpty() ){
-                error.postValue( "Input Fields cannot be Empty")
+           guardFound = guardDBRepository.fetchGuardByPassword(password)
+
+        }
+    }
+
+    fun insertGuardInfo(guard: Guard) {
+        viewModelScope.launch {
+
+            if(guard.userName.isNullOrEmpty() ||
+                guard.password.isNullOrEmpty()
+                 ){
+                error.postValue( "Guard detail empty")
             }else{
-                val resId: Long = guardDBRepository.insertGuardData(resident)
-                insertedId.postValue(resId)
+                val guardId: Long = guardDBRepository.insertGuardData(guard)
+                insertedId.postValue(guardId)
             }
         }
     }
 
-     */
+    fun checkIfDbEmpty(){
+
+    }
+
 
     fun fetchError(): LiveData<String> = error
 

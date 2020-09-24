@@ -8,6 +8,8 @@ buildscript {
     ext.coroutine_version = '1.3.8'
     ext.fragment_version =  "1.2.5"
     ext.support_library_version = '1.0.0'
+    ext.debug_db_version = '1.0.6'
+
 
 
     repositories {

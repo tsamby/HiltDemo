@@ -4,8 +4,10 @@ import android.content.Context
 import com.mindorks.paracamera.Camera
 import com.wizzpass.hilt.db.ResidentDB
 import com.wizzpass.hilt.db.dao.GuardDao
+import com.wizzpass.hilt.db.dao.ResAddressDao
 import com.wizzpass.hilt.db.dao.ResidentDao
 import com.wizzpass.hilt.db.repository.GuardDBRepository
+import com.wizzpass.hilt.db.repository.ResAddressDBRepository
 import com.wizzpass.hilt.db.repository.ResidentDBRepository
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import dagger.Module
@@ -37,7 +39,13 @@ object DBModule {
     @Provides
     fun provideGuardDBRepository(guardDao: GuardDao) = GuardDBRepository(guardDao)
 
+    @Provides
+    fun provideResAddressDao(@ApplicationContext appContext: Context) : ResAddressDao {
+        return ResidentDB.getInstance(appContext).resAddressDao
+    }
 
+    @Provides
+    fun provideResAddressDBRepository(resAddressDao: ResAddressDao) = ResAddressDBRepository(resAddressDao)
 
 
 

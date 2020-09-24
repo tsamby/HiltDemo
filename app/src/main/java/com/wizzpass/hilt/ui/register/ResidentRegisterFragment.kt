@@ -1,6 +1,7 @@
 package com.wizzpass.hilt.ui.register
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,10 @@ import androidx.lifecycle.Observer
 import com.mindorks.paracamera.Camera
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.util.getStringImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_register_resident.*
+import java.security.cert.Extension
 
 
 /**
@@ -25,10 +28,9 @@ class ResidentRegisterFragment  : Fragment(){
     private val registerViewModel : RegisterViewModel by viewModels()
     private var residentInfoView : View? = null
     var mContainerId:Int = -1
-
-
-
     lateinit var camera:Camera
+    var carImage : Boolean = false
+    var profImage : Boolean =  false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,11 +65,13 @@ class ResidentRegisterFragment  : Fragment(){
 
         img_profile.setOnClickListener {
 
+            profImage = true
             camera.takePicture()
         }
 
         img_car.setOnClickListener {
 
+            carImage = true
             camera.takePicture()
         }
 
@@ -79,6 +83,10 @@ class ResidentRegisterFragment  : Fragment(){
 
     fun getEnteredResidentDetails() : Resident {
 
+        val bmprofile = (img_profile.getDrawable() as BitmapDrawable).bitmap
+
+        val bmCar = (img_car.getDrawable() as BitmapDrawable).bitmap
+
         return Resident(
             0L,
             et_name.text.toString(),
@@ -86,7 +94,7 @@ class ResidentRegisterFragment  : Fragment(){
             et_mobile.text.toString(),
             et_address.text.toString(),
             et_carReg.text.toString(),
-            "",""
+            getStringImage(bmprofile),getStringImage(bmCar)
         )
 
     }
@@ -101,7 +109,11 @@ class ResidentRegisterFragment  : Fragment(){
         if (requestCode == Camera.REQUEST_TAKE_PHOTO) {
             val bitmap = camera.cameraBitmap
             if (bitmap != null) {
-                img_profile.setImageBitmap(bitmap)
+                if(profImage) {
+                    img_profile.setImageBitmap(bitmap)
+                }else{
+                    img_car.setImageBitmap(bitmap)
+                }
             } else {
                 Toast.makeText(
                     this.requireActivity().getApplicationContext(),

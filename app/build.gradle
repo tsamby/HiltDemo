@@ -85,6 +85,11 @@ dependencies {
     // optional - RxJava support for Room
     implementation "androidx.room:room-rxjava2:$room_version"
 
+
+    //RxJava
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+
     // optional - Guava support for Room, including Optional and ListenableFuture
     implementation "androidx.room:room-guava:$room_version"
 
@@ -96,6 +101,10 @@ dependencies {
 
     // camera library
     implementation 'com.mindorks:paracamera:0.2.2'
+
+    //Debbuging
+    // Debugging
+    debugImplementation "com.amitshekhar.android:debug-db:$debug_db_version"
 
 
 }

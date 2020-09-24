@@ -8,13 +8,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.wizzpass.hilt.db.dao.GuardDao
+import com.wizzpass.hilt.db.dao.ResAddressDao
 import com.wizzpass.hilt.db.dao.ResidentDao
 import com.wizzpass.hilt.db.dao.SupervisorDao
 import com.wizzpass.hilt.db.entity.Guard
+import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.db.entity.Supervisor
+import kotlinx.coroutines.CoroutineScope
 
-@Database(entities = [Supervisor::class, Guard::class,Resident::class], version = 1, exportSchema = false)
+@Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class], version = 1, exportSchema = false)
 
 abstract class ResidentDB : RoomDatabase() {
     /**
@@ -23,6 +26,8 @@ abstract class ResidentDB : RoomDatabase() {
     abstract val residentDao: ResidentDao
     abstract val guardDao : GuardDao
     abstract val supervisorDao : SupervisorDao
+    abstract val resAddressDao: ResAddressDao
+
 
     companion object {
 

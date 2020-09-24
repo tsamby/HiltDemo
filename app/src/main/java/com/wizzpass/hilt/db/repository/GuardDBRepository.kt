@@ -13,4 +13,8 @@ class GuardDBRepository  @Inject constructor(private val guardDao: GuardDao){
     suspend fun  insertGuardData(guard: Guard) = guardDao.insert(guard)
 
     suspend fun  fetchGuards() = guardDao.fetch()
+
+    suspend fun  fetchGuardByPassword(password : String) = guardDao.fetchGuardByPassword(password)
+
+    suspend fun getGuardCount() = guardDao.getRowCount()
 }

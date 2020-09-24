@@ -16,6 +16,7 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
     private  val insertedId =  MutableLiveData<Long>()
     private val  error = MutableLiveData<String>()
     var residentFinalList: LiveData<MutableList<Resident>> = MutableLiveData<MutableList<Resident>>()
+    var residentFound: LiveData<Resident> = MutableLiveData<Resident>()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun fetchResidentData(){
@@ -35,6 +36,24 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
                 val resId: Long = residentDBRepository.insertResidentData(resident)
                 insertedId.postValue(resId)
             }
+        }
+    }
+
+    fun fetchResidentByCarReg(searchField : String){
+        viewModelScope.launch {
+            residentFound = residentDBRepository.fetchResidentByCarReg(searchField)
+        }
+    }
+
+    fun fetchResidentByMobile(searchField : String){
+        viewModelScope.launch {
+            residentFound = residentDBRepository.fetchResidentByMobile(searchField)
+        }
+    }
+
+    fun fetchResidentByAddress(searchField : String){
+        viewModelScope.launch {
+            residentFinalList = residentDBRepository.fetchResidentByAddress(searchField)
         }
     }
 

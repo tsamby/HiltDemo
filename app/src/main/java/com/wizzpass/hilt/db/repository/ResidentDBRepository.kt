@@ -12,4 +12,10 @@ class ResidentDBRepository  @Inject constructor(private val residentDao: Residen
     suspend fun  insertResidentData(resident: Resident) = residentDao.insert(resident)
 
     suspend fun  fetchResidents() = residentDao.fetch()
+
+    suspend fun  fetchResidentByCarReg (searchField : String) = residentDao.fetchResidentByCarReg(searchField)
+
+    suspend fun  fetchResidentByMobile (searchField : String) = residentDao.fetchResidentByMobile(searchField)
+
+    suspend fun  fetchResidentByAddress (searchField : String) = residentDao.fetchAllResidentsLinkedToAddress(searchField)
 }
