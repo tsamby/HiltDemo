@@ -15,7 +15,8 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
 
     private  val insertedId =  MutableLiveData<Long>()
     private val  error = MutableLiveData<String>()
-    var residentFinalList: LiveData<MutableList<Resident>> = MutableLiveData<MutableList<Resident>>()
+    var residentFinalList:LiveData<MutableList<Resident>> = MutableLiveData<MutableList<Resident>>()
+    var residentsLinkedToSameAddress : LiveData<MutableList<Resident>> = MutableLiveData<MutableList<Resident>>()
     var residentFound: LiveData<Resident> = MutableLiveData<Resident>()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -53,8 +54,10 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
 
     fun fetchResidentByAddress(searchField : String){
         viewModelScope.launch {
-            residentFinalList = residentDBRepository.fetchResidentByAddress(searchField)
+            residentsLinkedToSameAddress = residentDBRepository.fetchResidentByAddress(searchField)
         }
+
+
     }
 
     fun fetchError(): LiveData<String> = error

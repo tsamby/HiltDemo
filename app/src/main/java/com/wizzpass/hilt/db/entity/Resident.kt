@@ -13,11 +13,11 @@ import androidx.room.PrimaryKey
 data class Resident (
     @PrimaryKey(autoGenerate = true)
     val resId : Long = 0L,
-    val fName : String,
-    val lname : String,
+    val carReg : String,
     val mobile : String,
     val address: String,
-    val carReg : String,
+    val fName : String,
+    val lname : String,
     @Nullable
     val profImage : String,
     @Nullable

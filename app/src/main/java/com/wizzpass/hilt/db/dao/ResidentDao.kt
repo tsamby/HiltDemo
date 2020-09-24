@@ -23,9 +23,9 @@ interface  ResidentDao{
     @Query("select * From resident WHERE carReg = :carReg LIMIT 1")
     fun  fetchResidentByCarReg(carReg : String) : LiveData<Resident>
 
-    @Query("select * From resident WHERE mobile = :carReg LIMIT 1")
-    fun  fetchResidentByMobile(carReg : String) : LiveData<Resident>
+    @Query("select * From resident WHERE mobile = :mobile LIMIT 1")
+    fun  fetchResidentByMobile(mobile : String) : LiveData<Resident>
 
-    @Query("select * From resident WHERE address = :resaddress ORDER BY fName ASC")
-    fun  fetchAllResidentsLinkedToAddress(resaddress : String) : LiveData<MutableList<Resident>>
+    @Query("select * From resident WHERE address = :address")
+    fun  fetchAllResidentsLinkedToAddress(address : String) : LiveData<MutableList<Resident>>
 }

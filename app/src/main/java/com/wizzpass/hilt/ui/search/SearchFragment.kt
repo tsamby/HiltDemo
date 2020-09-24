@@ -51,14 +51,21 @@ class SearchFragment : Fragment() {
 
         bt_register.setOnClickListener {
             if (!et_carReg.text.toString().isEmpty()) {
+
                 registerViewModel.fetchResidentByCarReg(et_carReg.text.toString())
                 fetchResidentFromViewModel()
+
             } else if (!et_mobile.text.toString().isEmpty()) {
+
                 registerViewModel.fetchResidentByMobile(et_mobile.text.toString())
                 fetchResidentFromViewModel()
+
             } else if (!et_address.text.toString().isEmpty()) {
+
                 registerViewModel.fetchResidentByAddress(et_address.toString())
+                //registerViewModel.fetchResidentData()
                 fetchResidentsFromViewModel()
+
             } else {
                 Toast.makeText(activity, "Search Filed can not be empty", Toast.LENGTH_LONG).show()
                 if (et_carReg.text.toString().isEmpty()) {
@@ -84,6 +91,10 @@ class SearchFragment : Fragment() {
 
     fun launchRegisterSearchResultFragment() {
         activity?.replaceFragment(SearchResultFragment(), mContainerId)
+    }
+
+    fun launchResultFragment() {
+        activity?.replaceFragment(ResidentFoundFragment(), mContainerId)
     }
 
 
@@ -115,9 +126,11 @@ class SearchFragment : Fragment() {
     private fun fetchResidentFromViewModel(){
         registerViewModel.residentFound.observe(viewLifecycleOwner,
             Observer<Resident> {
-                    t -> println("Received UserInfo List ${t}")
+                    t -> println("Received UserInfo2 List ${t}")
                 if(t==null){
                     launchRegisterSearchResultFragment()
+                }else{
+                    launchResultFragment()
                 }
 
 
@@ -126,9 +139,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun fetchResidentsFromViewModel(){
-        registerViewModel.residentFinalList.observe(viewLifecycleOwner,
+        registerViewModel.residentsLinkedToSameAddress.observe(viewLifecycleOwner,
             Observer<MutableList<Resident>> {
-                    t -> println("Received UserInfo List ${t}")
+                    t -> println("Received UserInfo List ${t.size}")
                 if(t==null){
                     launchRegisterSearchResultFragment()
                 }

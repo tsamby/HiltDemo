@@ -1,6 +1,7 @@
 package com.wizzpass.hilt.ui.register
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,7 +32,7 @@ class ResidentRegisterFragment  : Fragment(){
     lateinit var camera:Camera
     var carImage : Boolean = false
     var profImage : Boolean =  false
-
+    var bitmap : Bitmap? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -65,6 +66,8 @@ class ResidentRegisterFragment  : Fragment(){
 
         img_profile.setOnClickListener {
 
+
+
             profImage = true
             camera.takePicture()
         }
@@ -89,11 +92,13 @@ class ResidentRegisterFragment  : Fragment(){
 
         return Resident(
             0L,
-            et_name.text.toString(),
-            et_surname.text.toString(),
+            et_carReg.text.toString(),
             et_mobile.text.toString(),
             et_address.text.toString(),
-            et_carReg.text.toString(),
+            et_name.text.toString(),
+            et_surname.text.toString(),
+
+
             getStringImage(bmprofile),getStringImage(bmCar)
         )
 
@@ -107,10 +112,13 @@ class ResidentRegisterFragment  : Fragment(){
     ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Camera.REQUEST_TAKE_PHOTO) {
-            val bitmap = camera.cameraBitmap
+            bitmap = camera.cameraBitmap
+
+
             if (bitmap != null) {
                 if(profImage) {
                     img_profile.setImageBitmap(bitmap)
+
                 }else{
                     img_car.setImageBitmap(bitmap)
                 }
