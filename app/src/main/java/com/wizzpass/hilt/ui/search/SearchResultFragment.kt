@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -62,8 +64,8 @@ class SearchResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bt_resident.setOnClickListener {
-            //launchRegisterRegisterFragment()
-            launchRegisterSearchResultFragment(inputText!!,searchText!!)
+            showSupervisorDialog()
+            //launchRegisterSearchResultFragment(inputText!!,searchText!!)
         }
 
         bt_visitor.setOnClickListener {
@@ -84,6 +86,25 @@ class SearchResultFragment : Fragment() {
         activity?.replaceFragmentWithStringData(ResidentRegisterFragment(), mContainerId, inputText, searchString)
     }
 
+    fun showSupervisorDialog() {
 
+
+        val dialogBuilder = android.app.AlertDialog.Builder(context).create()
+        val inflater = this.layoutInflater
+        val dialogView: View = inflater.inflate(R.layout.custom_supervisor_dialog, null)
+        val textView = dialogView.findViewById<View>(R.id.textView9) as TextView
+        val button1 = dialogView.findViewById<View>(R.id.button) as Button
+        button1.setOnClickListener { view ->
+
+        }
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.show()
+        dialogBuilder.setOnCancelListener {
+
+
+        }
+
+
+    }
 
 }
