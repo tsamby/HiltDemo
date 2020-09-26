@@ -99,8 +99,6 @@ dependencies {
     // Material Design
     implementation "com.google.android.material:material:$support_library_version"
 
-    // camera library
-    implementation 'com.mindorks:paracamera:0.2.2'
 
     //Debbuging
     // Debugging

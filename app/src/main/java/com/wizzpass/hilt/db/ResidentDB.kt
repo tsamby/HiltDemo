@@ -29,6 +29,7 @@ abstract class ResidentDB : RoomDatabase() {
     abstract val resAddressDao: ResAddressDao
 
 
+
     companion object {
 
         @Volatile

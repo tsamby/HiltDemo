@@ -1,6 +1,9 @@
 package com.wizzpass.hilt.ui.search
 
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +29,7 @@ import kotlinx.android.synthetic.main.fragment_resident_found.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
 import kotlinx.android.synthetic.main.fragment_search_result.bt_visitor
+import java.io.File
 
 @AndroidEntryPoint
 class ResidentFoundFragment : Fragment() {
@@ -34,9 +38,11 @@ class ResidentFoundFragment : Fragment() {
     private val registerViewModel : RegisterViewModel by viewModels()
     private var searchView : View? = null
     var mContainerId:Int = -1
+    var resident: Resident? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -46,6 +52,9 @@ class ResidentFoundFragment : Fragment() {
     ): View? {
         searchView = inflater.inflate(R.layout.fragment_resident_found, container, false)
         mContainerId = container?.id?:-1
+
+        resident = arguments?.getParcelable("resident")
+
         return  searchView
     }
 
@@ -53,6 +62,29 @@ class ResidentFoundFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setBorder(innerConstraintLayout)
+        if(resident!=null) {
+            textViewName.setText(resident!!.fName)
+            textViewSurname.setText(resident!!.lname)
+            textViewCarReg.setText(resident!!.carReg)
+            textViewMobile.setText(resident!!.mobile)
+            textViewAddress.setText(resident!!.address + " " + resident!!.street_address)
+
+            if (resident!!.profImage != null) {
+                val imgFile = File(resident!!.profImage)
+                if (imgFile.exists()) {
+                    imageView.setColorFilter(null)
+                    imageView.setImageURI(Uri.fromFile(imgFile))
+                }
+                if (resident!!.carImage != null) {
+                    val imgFile = File(resident!!.carImage)
+                    if (imgFile.exists()) {
+                        imageView2.setColorFilter(null)
+                        imageView2.setImageURI(Uri.fromFile(imgFile))
+                    }
+                }
+            }
+        }
+
         bt_enter.setOnClickListener {
             launchSearchFragment()
         }

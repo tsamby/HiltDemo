@@ -1,35 +1,34 @@
 package com.wizzpass.hilt.ui.search
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.Guard
+import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.ui.register.RegisterViewModel
-import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
-import com.wizzpass.hilt.util.replaceFragment
+import com.wizzpass.hilt.ui.register.ResAddressViewModel
+import com.wizzpass.hilt.util.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_guard_login.*
 import kotlinx.android.synthetic.main.fragment_register_resident.*
-import kotlinx.android.synthetic.main.fragment_register_resident.bt_register
-import kotlinx.android.synthetic.main.fragment_register_resident.et_address
-import kotlinx.android.synthetic.main.fragment_register_resident.et_carReg
-import kotlinx.android.synthetic.main.fragment_register_resident.et_mobile
-import kotlinx.android.synthetic.main.fragment_search.*
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
 
     private val registerViewModel : RegisterViewModel by viewModels()
+    private val resAddressViewModel : ResAddressViewModel by viewModels()
     private var searchView : View? = null
     var mContainerId:Int = -1
+    var searchFieldUsed : String = ""
+    var inputString : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,23 +47,23 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         bt_register.setOnClickListener {
             if (!et_carReg.text.toString().isEmpty()) {
-
+                searchFieldUsed = "car_reg"
+                inputString = et_carReg.text.toString()
                 registerViewModel.fetchResidentByCarReg(et_carReg.text.toString())
                 fetchResidentFromViewModel()
 
             } else if (!et_mobile.text.toString().isEmpty()) {
-
+                searchFieldUsed = "mobile"
+                inputString = et_mobile.text.toString()
                 registerViewModel.fetchResidentByMobile(et_mobile.text.toString())
                 fetchResidentFromViewModel()
 
             } else if (!et_address.text.toString().isEmpty()) {
 
-                registerViewModel.fetchResidentByAddress(et_address.toString())
-                //registerViewModel.fetchResidentData()
-                fetchResidentsFromViewModel()
+                checkIfAddressExists()
+
 
             } else {
                 Toast.makeText(activity, "Search Filed can not be empty", Toast.LENGTH_LONG).show()
@@ -87,16 +86,52 @@ class SearchFragment : Fragment() {
         }
     }
 
+    fun checkIfAddressExists(){
+        if(!et_address.text.toString().isEmpty()) {
+            searchFieldUsed = "address"
+            inputString = et_address.text.toString()
+            resAddressViewModel.cheeckIfAddressExists(et_address.text.toString())
+            checkAdddressDataFromViewModel()
+        }
 
+    }
+
+    private fun checkAdddressDataFromViewModel(){
+        resAddressViewModel.addressExists.observe(viewLifecycleOwner,
+            Observer<ResAddress> {
+                    t -> println("Received UserInfo $t")
+
+                if(t!=null){
+                    registerViewModel.fetchResidentByAddress(et_address.text.toString().substring(0,2))
+                    fetchResidentsFromViewModel()
+
+                }else {
+                    et_address.setError("House number does not Exist")
+
+                }
+            }
+        )
+    }
 
     fun launchRegisterSearchResultFragment() {
-        activity?.replaceFragment(SearchResultFragment(), mContainerId)
+        activity?.replaceFragmentWithNoHistory(SearchResultFragment(), mContainerId)
     }
 
     fun launchResultFragment() {
         activity?.replaceFragment(ResidentFoundFragment(), mContainerId)
     }
 
+    fun launchResultWithDataFragment(resident : Resident) {
+        activity?.replaceFragmentWithDataTest(ResidentFoundFragment(), mContainerId, resident)
+    }
+
+    fun launchResultWithListDataFragment(residents :ArrayList<Resident>) {
+        activity?.replaceFragmentWithListDataTest(ResidentListInfo(), mContainerId, residents)
+    }
+
+    fun launchRegisterSearchResultFragment(inputText : String, searchString : String) {
+        activity?.replaceFragmentWithStringData(SearchResultFragment(), mContainerId, inputText, searchString)
+    }
 
 
         fun observeViewModel() {
@@ -128,9 +163,10 @@ class SearchFragment : Fragment() {
             Observer<Resident> {
                     t -> println("Received UserInfo2 List ${t}")
                 if(t==null){
-                    launchRegisterSearchResultFragment()
+                    launchRegisterSearchResultFragment(inputString,searchFieldUsed)
                 }else{
-                    launchResultFragment()
+                   // launchResultFragment()
+                    launchResultWithDataFragment(t)
                 }
 
 
@@ -141,9 +177,15 @@ class SearchFragment : Fragment() {
     private fun fetchResidentsFromViewModel(){
         registerViewModel.residentsLinkedToSameAddress.observe(viewLifecycleOwner,
             Observer<MutableList<Resident>> {
-                    t -> println("Received UserInfo List ${t.size}")
+                    t -> println("Test ${t.size}")
                 if(t==null){
                     launchRegisterSearchResultFragment()
+                }else if(t.size>1){
+                    var list = arrayListOf<Resident>()
+                    list = t as ArrayList<Resident>
+                    launchResultWithListDataFragment(list)
+                }else{
+                    launchResultWithDataFragment(t[0])
                 }
 
             }

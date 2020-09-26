@@ -30,10 +30,14 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
 
     fun insertResidentInfo(resident: Resident) {
         viewModelScope.launch {
+
+
+
             if(resident.fName.isNullOrEmpty() ||
                 resident.lname.isNullOrEmpty() ||
-                resident.carReg.isNullOrEmpty() ||
-                resident.address.isNullOrEmpty() ){
+                resident.address.isNullOrEmpty() ||
+                resident.street_address.isNullOrEmpty()||
+                resident.profImage.isNullOrEmpty()){
                 error.postValue( "Input Fields cannot be Empty")
             }else{
                 val resId: Long = residentDBRepository.insertResidentData(resident)
@@ -41,16 +45,6 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
             }
         }
     }
-
-   /* fun insertAddressInfo(resAddress: ResAddress) {
-        viewModelScope.launch {
-                val resId: Long = resAddressDBRepository.insertResAddressData(resAddress)
-                insertedId.postValue(resId)
-
-        }
-    }
-
-    */
 
     fun fetchResidentByCarReg(searchField : String){
         viewModelScope.launch {

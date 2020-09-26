@@ -1,6 +1,7 @@
 package com.wizzpass.hilt.ui.search
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.util.replaceFragment
+import com.wizzpass.hilt.util.replaceFragmentWithStringData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_guard_login.*
 import kotlinx.android.synthetic.main.fragment_register_resident.*
@@ -32,6 +34,9 @@ class SearchResultFragment : Fragment() {
     private var searchView : View? = null
     var mContainerId:Int = -1
 
+    var inputText: String? = ""
+    var searchText: String? = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -43,6 +48,13 @@ class SearchResultFragment : Fragment() {
     ): View? {
         searchView = inflater.inflate(R.layout.fragment_search_result, container, false)
         mContainerId = container?.id?:-1
+
+        inputText = arguments?.getString("inputText")
+        searchText = arguments?.getString("searchField")
+        Log.d("test", inputText!!)
+        Log.d("test", searchText!!)
+
+
         return  searchView
     }
 
@@ -50,7 +62,8 @@ class SearchResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bt_resident.setOnClickListener {
-            launchRegisterRegisterFragment()
+            //launchRegisterRegisterFragment()
+            launchRegisterSearchResultFragment(inputText!!,searchText!!)
         }
 
         bt_visitor.setOnClickListener {
@@ -65,6 +78,10 @@ class SearchResultFragment : Fragment() {
 
     fun launchVisitorResultFragment() {
         activity?.replaceFragment(SearchResultFragment(), mContainerId)
+    }
+
+    fun launchRegisterSearchResultFragment(inputText : String, searchString : String) {
+        activity?.replaceFragmentWithStringData(ResidentRegisterFragment(), mContainerId, inputText, searchString)
     }
 
 

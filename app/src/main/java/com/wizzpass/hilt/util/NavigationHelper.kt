@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.wizzpass.hilt.db.entity.Resident
 
 /**
  * Created by novuyo on 20,September,2020
@@ -34,6 +35,57 @@ inline fun FragmentManager.inTransactionWithoutHistory(func: FragmentTransaction
 }
 fun FragmentActivity.replaceFragment(fragment: Fragment, frameId: Int) {
     supportFragmentManager.inTransactionWithHistory { replace(frameId, fragment) }
+}
+
+fun FragmentActivity.replaceFragmentWithNoHistory(fragment: Fragment, frameId: Int) {
+    supportFragmentManager.inTransactionWithoutHistory { replace(frameId, fragment) }
+}
+
+
+inline fun FragmentManager.inTransactionWithoutHistoryData(func: FragmentTransaction.() -> FragmentTransaction) {
+    beginTransaction().func().commit()
+}
+
+fun FragmentActivity.replaceFragmentWithDataTest(fragment: Fragment, frameId: Int, resident : Resident) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putParcelable("resident", resident)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        transaction.replace(frameId, fragment)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //transaction.commit()
+    }
+}
+
+
+fun FragmentActivity.replaceFragmentWithListDataTest(fragment: Fragment, frameId: Int, resident : ArrayList<Resident>) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putParcelableArrayList("resident", resident)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        //transaction.replace(frameId, fragment)
+        //transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //transaction.commit()
+    }
+}
+
+fun FragmentActivity.replaceFragmentWithStringData(fragment: Fragment, frameId: Int, inputext : String, searchString :String) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putString("inputText", inputext)
+        bundle.putString("searchField", searchString)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+
+    }
 }
 
 fun <T> Context.openActivity(it: Class<T>, extras: Bundle.() -> Unit = {}) {

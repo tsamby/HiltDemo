@@ -13,6 +13,10 @@ data class ResAddress (
     @PrimaryKey(autoGenerate = true)
     val resAdrressId : Long = 0L,
 
-    @ColumnInfo(name = "address")
-    val resAddress : String
+    @ColumnInfo(name = "addressNo")
+    val resAddressNo : String,
+
+    @ColumnInfo(name = "street_address")
+    val resAddressStreet : String
+
 )

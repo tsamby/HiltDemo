@@ -34,7 +34,7 @@ fun setBorder(constraintLayout : ConstraintLayout) {
     var border = GradientDrawable()
     border.setColor(-0x1) //white background
 
-    border.setStroke(2, R.color.colorAccent)
+    border.setStroke(4, R.color.colorAccent)
     if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
         constraintLayout.setBackgroundDrawable(border)
     } else {

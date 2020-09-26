@@ -13,7 +13,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.db.entity.Guard
+import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.db.entity.Supervisor
+import com.wizzpass.hilt.ui.register.ResAddressViewModel
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.util.replaceFragment
@@ -30,11 +33,16 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
     private var guardView : View? = null
     var mContainerId:Int = -1
     private val guardLoginViewModel : GuardLoginViewModel by viewModels()
+    private val resAddressViewModel : ResAddressViewModel by viewModels ()
+    private val supervisorViewModel : SupervisorViewModel by viewModels ()
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+
     }
 
     override fun onCreateView(
@@ -64,6 +72,18 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         return et_password.text.toString()
     }
 
+    fun getResAddressDetails() : ResAddress {
+        return ResAddress(
+            0L,
+            "362",
+            "Ferndale"
+        )
+    }
+
+
+
+
+
     fun getGuardDetailsDetails() : Guard {
         return Guard(
             0L,
@@ -71,6 +91,15 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
             "0000"
         )
     }
+
+    fun getSupervisorDetailsDetails() : Supervisor {
+        return Supervisor(
+            0L,
+            "admin",
+            "0000"
+        )
+    }
+
 
     fun launchRegisterResidentFragment(){
         activity?.replaceFragment(ResidentRegisterFragment(), mContainerId)
@@ -88,6 +117,8 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
                     t -> println("Received UserInfo List ${t.size}")
                if(t.size==0){
                    guardLoginViewModel.insertGuardInfo(getGuardDetailsDetails())
+                   supervisorViewModel.insertSupervisorInfo(getSupervisorDetailsDetails())
+                   resAddressViewModel.insertResAddressInfo()
                }
 
             }
@@ -109,6 +140,17 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         )
     }
 
+    private fun fetchAddressesViewModel(){
 
+        resAddressViewModel.residentFinalList.observe(viewLifecycleOwner,
+            Observer<MutableList<ResAddress>> {
+                    t -> println("Address List ${t.size}")
+                if(t.size==0){
+                    resAddressViewModel.insertResAddressInfo()
+                }
+
+            }
+        )
+    }
 
 }

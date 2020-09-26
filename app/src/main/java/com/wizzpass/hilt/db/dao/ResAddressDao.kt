@@ -27,7 +27,7 @@ interface ResAddressDao {
     fun deleteAll()
 
 
-    @Query("select * From res_address WHERE address = :address")
+    @Query("select * From res_address WHERE addressNo = :address")
     fun  fetchAddress(address : String) : LiveData<ResAddress>
 
 
