@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
@@ -14,6 +15,8 @@ import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.db.entity.Guard
 import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.db.entity.Supervisor
+import com.wizzpass.hilt.ui.login.SupervisorViewModel
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.util.replaceFragment
@@ -32,12 +35,14 @@ import kotlinx.android.synthetic.main.fragment_search_result.*
 class SearchResultFragment : Fragment() {
 
 
-    private val registerViewModel : RegisterViewModel by viewModels()
+    private val supervisorViewModel : SupervisorViewModel by viewModels()
     private var searchView : View? = null
     var mContainerId:Int = -1
 
     var inputText: String? = ""
     var searchText: String? = ""
+    var edt_pin : EditText? = null
+    var dialogBuilder : android.app.AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,18 +93,25 @@ class SearchResultFragment : Fragment() {
 
     fun showSupervisorDialog() {
 
-
-        val dialogBuilder = android.app.AlertDialog.Builder(context).create()
+        dialogBuilder = android.app.AlertDialog.Builder(context).create()
         val inflater = this.layoutInflater
         val dialogView: View = inflater.inflate(R.layout.custom_supervisor_dialog, null)
         val textView = dialogView.findViewById<View>(R.id.textView9) as TextView
         val button1 = dialogView.findViewById<View>(R.id.button) as Button
+        edt_pin = dialogView.findViewById<View>(R.id.et_password) as EditText
+
         button1.setOnClickListener { view ->
 
+            if(edt_pin!!.text.toString().isEmpty()){
+                edt_pin!!.setError("Pin can not be empty")
+            }else {
+                supervisorViewModel.fetchSupervisorByPasword(edt_pin!!.text.toString())
+                fetchSupervisorFromViewModel()
+            }
         }
-        dialogBuilder.setView(dialogView)
-        dialogBuilder.show()
-        dialogBuilder.setOnCancelListener {
+        dialogBuilder!!.setView(dialogView)
+        dialogBuilder!!.show()
+        dialogBuilder!!.setOnCancelListener {
 
 
         }
@@ -107,4 +119,27 @@ class SearchResultFragment : Fragment() {
 
     }
 
+    private fun fetchSupervisorFromViewModel(){
+        supervisorViewModel.supervisorFound.observe(viewLifecycleOwner,
+            Observer<Supervisor> {
+                    t -> println("Received UserInfo List ${t}")
+                if(t==null){
+                    edt_pin!!.setError("Pin incorrect")
+                }else{
+                    dialogBuilder!!.dismiss()
+                    launchRegisterSearchResultFragment(inputText!!,searchText!!)
+                }
+
+
+            }
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if(dialogBuilder!=null){
+            dialogBuilder!!.dismiss()
+        }
+    }
 }
