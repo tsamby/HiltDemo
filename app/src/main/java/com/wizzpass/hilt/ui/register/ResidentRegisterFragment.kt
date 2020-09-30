@@ -60,9 +60,15 @@ class ResidentRegisterFragment  : Fragment(){
      var carImage4 : Boolean = false
      var carImage5 : Boolean = false
     val REQUEST_IMAGE_CAPTURE = 1
+
     lateinit var currentPhotoPath: String
     var imgProfilePhotoPath: String? = ""
     var carProfilePhotoPath: String? = ""
+    var carProfilePhotoPath2: String? = ""
+    var carProfilePhotoPath3: String? = ""
+    var carProfilePhotoPath4: String? = ""
+    var carProfilePhotoPath5: String? = ""
+
     val REQUEST_TAKE_PHOTO = 1
     var inputText: String? = ""
     var searchText: String? = ""
@@ -102,6 +108,11 @@ class ResidentRegisterFragment  : Fragment(){
         img_profile.setOnClickListener {
             profImage = true
             carImage = false
+            carImage2 = false
+            carImage3 = false
+            carImage4 = false
+            carImage5 = false
+
             dispatchTakePictureIntent()
         }
 
@@ -109,13 +120,17 @@ class ResidentRegisterFragment  : Fragment(){
 
             carImage = true
             profImage = false
+            carImage2 = false
+            carImage3 = false
+            carImage4 = false
+            carImage5 = false
             dispatchTakePictureIntent()
 
         }
 
 
         floatingActionButton3.setOnClickListener(clickListener)
-
+        floatingActionButton3.visibility=View.GONE
 
         floatingActionButton4.setOnClickListener(clickListener)
         img_car2.setOnClickListener(clickListener)
@@ -154,30 +169,42 @@ class ResidentRegisterFragment  : Fragment(){
         when (view.getId()) {
             R.id.floatingActionButton3 -> {
                 carImage2 = true
+                profImage = false
+                carImage = false
+                carImage3 = false
+                carImage4 = false
+                carImage5 = false
                 dispatchTakePictureIntent()
-                floatingActionButton4.visibility =View.VISIBLE
-                textViewcar2.visibility=View.VISIBLE
-                img_car2.visibility=View.VISIBLE
+
             }
             R.id.floatingActionButton4 ->{
                 carImage3 = true
+                profImage = false
+                carImage2 = false
+                carImage = false
+                carImage4 = false
+                carImage5 = false
                 dispatchTakePictureIntent()
-                floatingActionButton5.visibility=View.VISIBLE
-                textViewcar3.visibility=View.VISIBLE
-                img_car3.visibility=View.VISIBLE
+
             }
             R.id.floatingActionButton5 ->{
                 carImage4= true
+                profImage = false
+                carImage2 = false
+                carImage3 = false
+                carImage = false
+                carImage5 = false
                 dispatchTakePictureIntent()
-                floatingActionButton6.visibility=View.VISIBLE
-                textViewcar4.visibility=View.VISIBLE
-                img_car4.visibility=View.VISIBLE
+
             }
             R.id.floatingActionButton6 ->{
                 carImage5= true
+                profImage = false
+                carImage2 = false
+                carImage3 = false
+                carImage4 = false
+                carImage = false
                 dispatchTakePictureIntent()
-                textViewcar5.visibility=View.VISIBLE
-                img_car5.visibility=View.VISIBLE
             }
 
         }
@@ -331,6 +358,7 @@ class ResidentRegisterFragment  : Fragment(){
         }
     }
 
+     @SuppressLint("RestrictedApi")
      override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
@@ -345,11 +373,42 @@ class ResidentRegisterFragment  : Fragment(){
                     img_profile.setImageURI(Uri.fromFile(imgFile))
                     imgProfilePhotoPath = currentPhotoPath
 
-                }else if(carImage)else{
+                }else if(carImage){
                     img_car.setColorFilter(null)
                     img_car.setImageURI(Uri.fromFile(imgFile))
                     carProfilePhotoPath = currentPhotoPath
+                    floatingActionButton3.visibility=View.VISIBLE
 
+                }else if(carImage2){
+                    img_car2.setColorFilter(null)
+                    img_car2.setImageURI(Uri.fromFile(imgFile))
+                    carProfilePhotoPath2 = currentPhotoPath
+                    floatingActionButton4.visibility =View.VISIBLE
+                    textViewcar2.visibility=View.VISIBLE
+                    img_car2.visibility=View.VISIBLE
+
+                } else if(carImage3){
+                    img_car3.setColorFilter(null)
+                    img_car3.setImageURI(Uri.fromFile(imgFile))
+                    carProfilePhotoPath3 = currentPhotoPath
+                    floatingActionButton5.visibility=View.VISIBLE
+                    textViewcar3.visibility=View.VISIBLE
+                    img_car3.visibility=View.VISIBLE
+
+                } else if(carImage4){
+                    img_car4.setColorFilter(null)
+                    img_car4.setImageURI(Uri.fromFile(imgFile))
+                    carProfilePhotoPath4 = currentPhotoPath
+                    floatingActionButton6.visibility=View.VISIBLE
+                    textViewcar4.visibility=View.VISIBLE
+                    img_car4.visibility=View.VISIBLE
+
+                }else if(carImage5){
+                    img_car5.setColorFilter(null)
+                    img_car5.setImageURI(Uri.fromFile(imgFile))
+                    carProfilePhotoPath5 = currentPhotoPath
+                    textViewcar5.visibility=View.VISIBLE
+                    img_car5.visibility=View.VISIBLE
                 }
 
             }
