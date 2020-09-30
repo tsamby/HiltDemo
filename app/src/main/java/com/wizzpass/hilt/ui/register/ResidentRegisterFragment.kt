@@ -1,5 +1,6 @@
 package com.wizzpass.hilt.ui.register
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Color
@@ -54,6 +55,10 @@ class ResidentRegisterFragment  : Fragment(){
     var mContainerId:Int = -1
     var carImage : Boolean = false
     var profImage : Boolean =  false
+     var carImage2 : Boolean = false
+     var carImage3 : Boolean = false
+     var carImage4 : Boolean = false
+     var carImage5 : Boolean = false
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath: String
     var imgProfilePhotoPath: String? = ""
@@ -83,6 +88,7 @@ class ResidentRegisterFragment  : Fragment(){
         return  residentInfoView
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -108,9 +114,73 @@ class ResidentRegisterFragment  : Fragment(){
         }
 
 
+        floatingActionButton3.setOnClickListener(clickListener)
+
+
+        floatingActionButton4.setOnClickListener(clickListener)
+        img_car2.setOnClickListener(clickListener)
+        textViewcar2.visibility=View.GONE
+        img_car2.visibility=View.GONE
+        floatingActionButton4.visibility=View.GONE
+
+
+        floatingActionButton5.setOnClickListener(clickListener)
+        img_car3.setOnClickListener(clickListener)
+        textViewcar3.visibility=View.GONE
+        img_car3.visibility=View.GONE
+        floatingActionButton5.visibility=View.GONE
+
+        floatingActionButton6.setOnClickListener(clickListener)
+        img_car4.setOnClickListener(clickListener)
+        textViewcar4.visibility=View.GONE
+        img_car4.visibility=View.GONE
+        floatingActionButton6.visibility=View.GONE
+
+
+
+        textViewcar5.visibility=View.GONE
+        img_car5.visibility=View.GONE
+
 
         observeViewModel()
 
+
+
+    }
+
+    @SuppressLint("RestrictedApi")
+    val clickListener = View.OnClickListener { view ->
+
+        when (view.getId()) {
+            R.id.floatingActionButton3 -> {
+                carImage2 = true
+                dispatchTakePictureIntent()
+                floatingActionButton4.visibility =View.VISIBLE
+                textViewcar2.visibility=View.VISIBLE
+                img_car2.visibility=View.VISIBLE
+            }
+            R.id.floatingActionButton4 ->{
+                carImage3 = true
+                dispatchTakePictureIntent()
+                floatingActionButton5.visibility=View.VISIBLE
+                textViewcar3.visibility=View.VISIBLE
+                img_car3.visibility=View.VISIBLE
+            }
+            R.id.floatingActionButton5 ->{
+                carImage4= true
+                dispatchTakePictureIntent()
+                floatingActionButton6.visibility=View.VISIBLE
+                textViewcar4.visibility=View.VISIBLE
+                img_car4.visibility=View.VISIBLE
+            }
+            R.id.floatingActionButton6 ->{
+                carImage5= true
+                dispatchTakePictureIntent()
+                textViewcar5.visibility=View.VISIBLE
+                img_car5.visibility=View.VISIBLE
+            }
+
+        }
     }
 
     fun setUi(inputText : String, searchField : String){
@@ -275,7 +345,7 @@ class ResidentRegisterFragment  : Fragment(){
                     img_profile.setImageURI(Uri.fromFile(imgFile))
                     imgProfilePhotoPath = currentPhotoPath
 
-                }else{
+                }else if(carImage)else{
                     img_car.setColorFilter(null)
                     img_car.setImageURI(Uri.fromFile(imgFile))
                     carProfilePhotoPath = currentPhotoPath
@@ -290,6 +360,10 @@ class ResidentRegisterFragment  : Fragment(){
         super.onDestroy()
 
     }
+
+
+
+
 
 
 

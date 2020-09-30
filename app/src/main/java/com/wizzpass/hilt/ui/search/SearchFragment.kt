@@ -165,7 +165,7 @@ class SearchFragment : Fragment() {
                 if(t==null){
                     launchRegisterSearchResultFragment(inputString,searchFieldUsed)
                 }else{
-                   // launchResultFragment()
+
                     launchResultWithDataFragment(t)
                 }
 
@@ -177,7 +177,7 @@ class SearchFragment : Fragment() {
     private fun fetchResidentsFromViewModel(){
         registerViewModel.residentsLinkedToSameAddress.observe(viewLifecycleOwner,
             Observer<MutableList<Resident>> {
-                    t -> println("Test ${t.size}")
+                    t -> println("Test ${t}")
                 if(t==null){
                     launchRegisterSearchResultFragment()
                 }else if(t.size>1){
@@ -185,7 +185,8 @@ class SearchFragment : Fragment() {
                     list = t as ArrayList<Resident>
                     launchResultWithListDataFragment(list)
                 }else{
-                    launchResultWithDataFragment(t[0])
+
+                    launchRegisterSearchResultFragment(inputString,searchFieldUsed)
                 }
 
             }
