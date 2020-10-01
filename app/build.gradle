@@ -99,6 +99,9 @@ dependencies {
     // Material Design
     implementation "com.google.android.material:material:$support_library_version"
 
+    //gson
+    implementation "com.google.code.gson:gson:$gson"
+
 
     //Debbuging
     // Debugging

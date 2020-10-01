@@ -17,7 +17,7 @@ import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.db.entity.Supervisor
 import kotlinx.coroutines.CoroutineScope
 
-@Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class], version = 1, exportSchema = false)
+@Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class], version = 2, exportSchema = false)
 
 abstract class ResidentDB : RoomDatabase() {
     /**

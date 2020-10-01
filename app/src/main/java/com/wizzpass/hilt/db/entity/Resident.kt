@@ -23,7 +23,7 @@ data class Resident(
     @Nullable
     val profImage: String,
     @Nullable
-    val carImage: String
+    val carImage: ArrayList<String>
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
@@ -34,60 +34,45 @@ data class Resident(
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
-        parcel.readString().toString()
+        TODO("carImage")
     ) {
     }
 
-    /*override fun writeToParcel(p0: Parcel?, p1: Int) {
-
+    override fun writeToParcel(p0: Parcel?, p1: Int) {
+        TODO("Not yet implemented")
     }
 
     override fun describeContents(): Int {
-
-
-    companion object CREATOR : Parcelable.Creator<Resident> {
-        override fun createFromParcel(parcel: Parcel): Resident {
-            return Resident(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Resident?> {
-            return arrayOfNulls(size)
-        }
-    }
-
-     */
-
-
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(resId)
-        parcel.writeString(carReg)
-        parcel.writeString(mobile)
-        parcel.writeString(address)
-        parcel.writeString(street_address)
-        parcel.writeString(fName)
-        parcel.writeString(lname)
-        parcel.writeString(profImage)
-        parcel.writeString(carImage)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Resident> {
-        override fun createFromParcel(parcel: Parcel): Resident {
-            return Resident(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Resident?> {
-            return arrayOfNulls(size)
-        }
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
-        return "Resident(resId=$resId, carReg='$carReg', mobile='$mobile', address='$address', street_address='$street_address', fName='$fName', lname='$lname', profImage='$profImage', carImage='$carImage')"
+        return "Resident(resId=$resId, carReg='$carReg', mobile='$mobile', address='$address', street_address='$street_address', fName='$fName', lname='$lname', profImage='$profImage', carImage=$carImage)"
+    }
+
+    companion object CREATOR : Parcelable.Creator<Resident> {
+        override fun createFromParcel(parcel: Parcel): Resident {
+            return Resident(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Resident?> {
+            return arrayOfNulls(size)
+        }
     }
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

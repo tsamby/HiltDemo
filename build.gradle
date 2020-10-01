@@ -9,6 +9,7 @@ buildscript {
     ext.fragment_version =  "1.2.5"
     ext.support_library_version = '1.0.0'
     ext.debug_db_version = '1.0.6'
+    ext.gson ='2.8.5'
 
 
 
