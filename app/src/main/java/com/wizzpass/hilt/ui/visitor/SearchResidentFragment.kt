@@ -48,7 +48,7 @@ class SearchResidentFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        searchView = inflater.inflate(R.layout.fragment_search, container, false)
+        searchView = inflater.inflate(R.layout.fragment_visitor_search, container, false)
         mContainerId = container?.id?:-1
         return  searchView
     }

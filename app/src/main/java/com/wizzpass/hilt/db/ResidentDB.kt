@@ -7,6 +7,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.wizzpass.hilt.db.dao.GuardDao
 import com.wizzpass.hilt.db.dao.ResAddressDao
 import com.wizzpass.hilt.db.dao.ResidentDao
@@ -15,10 +16,10 @@ import com.wizzpass.hilt.db.entity.Guard
 import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.db.entity.Supervisor
-import kotlinx.coroutines.CoroutineScope
 
 @Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class], version = 2, exportSchema = false)
 
+@TypeConverters(Converters::class)
 abstract class ResidentDB : RoomDatabase() {
     /**
      * Connects the database to the DAO.
