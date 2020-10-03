@@ -1,16 +1,19 @@
-package com.wizzpass.hilt.ui.secondaryDrivers
+package com.wizzpass.hilt.ui.additionalVehicles
 
+
+
+/**
+ * Created by novuyo on 03,October,2020
+ */
 
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,15 +22,19 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.SecondaryDriver
+import com.wizzpass.hilt.db.entity.Vehicles
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.util.replaceFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.*
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.et_name
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.et_surname
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.imageView6
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.img_profile
+import kotlinx.android.synthetic.main.fragment_register_resident.et_carReg
+import kotlinx.android.synthetic.main.fragment_register_resident.et_name
+import kotlinx.android.synthetic.main.fragment_register_resident.et_surname
+import kotlinx.android.synthetic.main.fragment_register_resident.imageView6
+import kotlinx.android.synthetic.main.fragment_register_resident.img_car
+import kotlinx.android.synthetic.main.fragment_register_resident.img_profile
+import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_add
+import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_done
+import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_save
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -36,41 +43,30 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wizzpass.hilt.adapter.AdditionalVehicleAdapter
-import com.wizzpass.hilt.adapter.SecondaryDriverAdapter
+import com.wizzpass.hilt.adapter.ResidentAdapter
 import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.Vehicles
 import kotlinx.android.synthetic.main.fragment_additional_cars.*
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_add
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_done
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_save
-
-/**
- * Created by novuyo on 03,October,2020
- */
+import kotlinx.android.synthetic.main.fragment_resident_list.*
 
 @AndroidEntryPoint
-class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickListener{
+class AdditionalVehiclesFragment  : Fragment(), AdditionalVehicleAdapter.OnItemClickListener{
 
-
-
-    private var secDriverInfoView : View? = null
+    private var residentInfoView : View? = null
     var mContainerId:Int = -1
-    var profImage : Boolean =  false
+    var carImage : Boolean = false
+
+    private var vehiclesAdapter : AdditionalVehicleAdapter? = null
+    var vehicles= arrayListOf<Vehicles>()
+
     val REQUEST_IMAGE_CAPTURE = 1
 
     lateinit var currentPhotoPath: String
-    var imgProfilePhotoPath: String? = ""
+    var carProfilePhotoPath: String? = ""
+    var myList: ArrayList<String> = arrayListOf()
     val REQUEST_TAKE_PHOTO = 1
-
-    private val secondaryDriverViewModel : SecondaryDriverViewModel by viewModels()
-    var carRegistration: String? = ""
     var mobile_reg: String? = ""
     var add_reg: String? = ""
-
-    private var driversAdapter : SecondaryDriverAdapter? = null
-    var drivers= arrayListOf<SecondaryDriver>()
-    var resident: Resident? = null
-
+    private val vehiclesViewModel : AdditionalVehiclesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,34 +77,29 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        secDriverInfoView = inflater.inflate(R.layout.fragment_secondary_drivers, container, false)
+        residentInfoView = inflater.inflate(R.layout.fragment_additional_cars, container, false)
         mContainerId = container?.id?:-1
 
-        carRegistration = arguments?.getString("carReg")
         mobile_reg = arguments?.getString("mobile")
         add_reg = arguments?.getString("address")
-        resident = arguments?.getParcelable("resident")
 
-        Log.d("RESIDENT",resident.toString())
-        println("RESIDENT ${resident.toString()}")
-
-
-
-        return  secDriverInfoView
+        return  residentInfoView
     }
 
     @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         imageView6.setOnClickListener {
+        }
 
+        img_car.setOnClickListener {
+            dispatchTakePictureIntent()
         }
 
         bt_save.setOnClickListener {
-            val secondaryDriver = getEnteredSecondaryDriverDetails()
-            secondaryDriverViewModel.insertSecondaryDriverInfo(secondaryDriver)
+            val vehicle = getEnteredVehicleDetails()
+            vehiclesViewModel.insertVehicleInfo(vehicle)
         }
 
 
@@ -116,43 +107,62 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
             bt_add.visibility=View.GONE
             bt_done.visibility = View.GONE
             bt_save.visibility = View.VISIBLE
-            et_name.setText("")
-            et_surname.setText("")
-            img_profile.setColorFilter(null)
-            img_profile.setImageDrawable(null);
-            img_profile.setBackgroundResource(R.drawable.cam);
-            imgProfilePhotoPath= ""
+            et_carReg.setText("")
+            img_car.setColorFilter(null)
+            img_car.setImageDrawable(null);
+            img_car.setBackgroundResource(R.drawable.cam);
+            carProfilePhotoPath= ""
         }
-
         bt_done.setOnClickListener {
 
         }
-
-
-        img_profile.setOnClickListener {
-            profImage = true
-            dispatchTakePictureIntent()
-
-        }
-
-
         observeViewModel()
 
         initAdapter()
     }
+    fun observeViewModel(){
+        vehiclesViewModel.fetchError().observe(viewLifecycleOwner,
+            Observer<String> {
+                    t -> Toast.makeText(activity,t, Toast.LENGTH_LONG).show()
+                if(t!=null){
 
-    fun uploadDriversList(secondaryDrivers : ArrayList<SecondaryDriver>){
-        driversAdapter?.refreshAdapter(secondaryDrivers)
+                }
+            })
+
+        vehiclesViewModel.fetchInsertedId().observe(viewLifecycleOwner,
+            Observer<Long> { t ->
+                if(t != -1L){
+                    Toast.makeText(activity,"Secondary vehicle saved ", Toast.LENGTH_LONG).show()
+                    activity?.let{
+
+                        bt_add.visibility=View.VISIBLE
+                        bt_done.visibility = View.VISIBLE
+                        bt_save.visibility = View.GONE
+                        vehicles.add(getEnteredVehicleDetails())
+                        uploadVehicleList(vehicles)
+
+
+                    }
+                }else{
+                    Toast.makeText(activity,"Secondary Vehicle not saved", Toast.LENGTH_LONG).show()
+
+                }
+
+            })
+    }
+
+    fun uploadVehicleList(vehicles : ArrayList<Vehicles>){
+        vehiclesAdapter?.refreshAdapter(vehicles)
     }
 
 
 
     private fun initAdapter(){
-        driversAdapter = SecondaryDriverAdapter(arrayListOf(), this)
-        recyclerview_drivers.apply {
+        vehiclesAdapter = AdditionalVehicleAdapter(arrayListOf(), this)
+        recyclerview_add_cars.apply {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = driversAdapter
+            adapter = vehiclesAdapter
 
         }
 
@@ -163,58 +173,22 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
 
     }
 
-    fun observeViewModel(){
-        secondaryDriverViewModel.fetchError().observe(viewLifecycleOwner,
-            Observer<String> {
-                    t -> Toast.makeText(activity,t, Toast.LENGTH_LONG).show()
-                if(t!=null){
 
-                }
-            })
+    fun getEnteredVehicleDetails() : Vehicles {
+        val bmprofile = carProfilePhotoPath
+        return Vehicles(
+            et_carReg.text.toString(),
+            mobile_reg!!,
+            add_reg!!,
+            bmprofile!!
+        )
 
-        secondaryDriverViewModel.fetchInsertedId().observe(viewLifecycleOwner,
-            Observer<Long> { t ->
-                if(t != -1L){
-                    Toast.makeText(activity,"Secondary Driver saved ", Toast.LENGTH_LONG).show()
-                    activity?.let{
-                        //launchSearchFragment()
-                        bt_add.visibility=View.VISIBLE
-                        bt_done.visibility = View.VISIBLE
-                        bt_save.visibility = View.GONE
-                        drivers.add(getEnteredSecondaryDriverDetails())
-                        uploadDriversList(drivers)
-
-
-                    }
-                }else{
-                    Toast.makeText(activity,"Secondary Driver not saved", Toast.LENGTH_LONG).show()
-
-                }
-
-            })
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     fun launchSearchFragment() {
         activity?.replaceFragment(SearchFragment(), mContainerId)
     }
-
-
 
     private fun dispatchTakePictureIntent() {
 
@@ -261,33 +235,12 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imgFile = File(currentPhotoPath)
             if (imgFile.exists()) {
-                if(profImage) {
-                    img_profile.setColorFilter(null)
-                    //img_profile.setImageDrawable(null)
-                    img_profile.setImageURI(Uri.fromFile(imgFile))
-                    imgProfilePhotoPath = currentPhotoPath
-
-                }
-
+                img_car.setColorFilter(null)
+                img_car.setImageURI(Uri.fromFile(imgFile))
+                carProfilePhotoPath = currentPhotoPath
             }
         }
     }
-
-
-    fun getEnteredSecondaryDriverDetails() : SecondaryDriver {
-        val bmprofile = imgProfilePhotoPath
-        return SecondaryDriver(
-            0L,
-            carRegistration!!,
-            mobile_reg!!,
-            add_reg!!,
-            et_name.text.toString(),
-            et_surname.text.toString(), bmprofile!!
-        )
-
-    }
-
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -305,5 +258,3 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
 
 
 }
-
-

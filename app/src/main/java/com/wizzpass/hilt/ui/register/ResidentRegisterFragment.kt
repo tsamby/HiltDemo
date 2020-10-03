@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +19,10 @@ import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.ui.additionalDrivers.AdditionalDriverFragment
-import com.wizzpass.hilt.ui.search.ResidentFoundFragment
+import com.wizzpass.hilt.ui.additionalVehicles.AdditionalVehiclesFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.ui.secondaryDrivers.SecondaryDriverFragment
-import com.wizzpass.hilt.util.getStringImage
+import com.wizzpass.hilt.ui.secondaryDrivers.SecondaryDriverViewModel
 import com.wizzpass.hilt.util.replaceFragment
 import com.wizzpass.hilt.util.replaceFragmentWithNoHistory
 import com.wizzpass.hilt.util.replaceFragmentWithStringData
@@ -42,7 +40,6 @@ import kotlinx.android.synthetic.main.fragment_register_resident.img_car
 import kotlinx.android.synthetic.main.fragment_register_resident.img_profile
 import kotlinx.android.synthetic.main.fragment_register_resident.textView5
 import kotlinx.android.synthetic.main.fragment_register_resident_two.*
-import kotlinx.android.synthetic.main.fragment_search.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -57,25 +54,21 @@ class ResidentRegisterFragment  : Fragment(){
 
     private val registerViewModel : RegisterViewModel by viewModels()
     private val resAddressViewModel : ResAddressViewModel by viewModels()
+    private val secondaryDriverViewModel : SecondaryDriverViewModel by viewModels()
 
 
     private var residentInfoView : View? = null
     var mContainerId:Int = -1
     var carImage : Boolean = false
     var profImage : Boolean =  false
-     var carImage2 : Boolean = false
-     var carImage3 : Boolean = false
-     var carImage4 : Boolean = false
-     var carImage5 : Boolean = false
+    var additionalCars : Boolean = false
+    var secondaryDrivers : Boolean = false
+
     val REQUEST_IMAGE_CAPTURE = 1
 
     lateinit var currentPhotoPath: String
     var imgProfilePhotoPath: String? = ""
     var carProfilePhotoPath: String? = ""
-    var carProfilePhotoPath2: String? = ""
-    var carProfilePhotoPath3: String? = ""
-    var carProfilePhotoPath4: String? = ""
-    var carProfilePhotoPath5: String? = ""
     var myList: ArrayList<String> = arrayListOf()
     var addtionalCars: ArrayList<String> = arrayListOf()
     var secDrrivers: ArrayList<String> = arrayListOf()
@@ -114,12 +107,16 @@ class ResidentRegisterFragment  : Fragment(){
         }
 
         buttonAdditionalCar.setOnClickListener {
-
-            launchAdditionalCarsFragment()
+            additionalCars=true
+            secondaryDrivers = false
+            registerViewModel.checkResidentInfo(getEnteredResidentDetails())
 
         }
         buttonAdditionalDrivers.setOnClickListener {
+            secondaryDrivers = true
+            additionalCars=false
             registerViewModel.checkResidentInfo(getEnteredResidentDetails())
+
         }
 
         bt_register.setOnClickListener {
@@ -129,33 +126,15 @@ class ResidentRegisterFragment  : Fragment(){
         img_profile.setOnClickListener {
             profImage = true
             carImage = false
-            carImage2 = false
-            carImage3 = false
-            carImage4 = false
-            carImage5 = false
-
             dispatchTakePictureIntent()
         }
 
         img_car.setOnClickListener {
-
             carImage = true
             profImage = false
-            carImage2 = false
-            carImage3 = false
-            carImage4 = false
-            carImage5 = false
             dispatchTakePictureIntent()
-
         }
-
-
-
-
         observeViewModel()
-
-
-
     }
 
 
@@ -178,6 +157,8 @@ class ResidentRegisterFragment  : Fragment(){
     }
 
     fun checkIfAddressExists(){
+
+
         if(!et_address.text.toString().isEmpty()) {
             resAddressViewModel.cheeckIfAddressExists(et_address.text.toString())
             checkAdddressDataFromViewModel()
@@ -252,7 +233,9 @@ class ResidentRegisterFragment  : Fragment(){
                     t -> println("Test ${t}")
                 if(t!=null){
                     if(t.equals("true")){
-                        launchRegisterSearchResultFragment(et_carReg.text.toString(),et_mobile.text.toString(), et_address.text.toString())
+
+                        checkIfAddressExists()
+
                     }else {
                         if (et_name.text.toString().isEmpty()) {
                             et_name.setError("Enter name")
@@ -283,9 +266,15 @@ class ResidentRegisterFragment  : Fragment(){
     }
 
 
-    fun launchRegisterSearchResultFragment(carReg : String, mobile : String, address: String) {
-        activity?.replaceFragmentWithStringData(SecondaryDriverFragment(), mContainerId, carReg, mobile,address)
+    fun launchRegisterSearchResultFragment(carReg : String, mobile : String, address: String,resident: Resident) {
+        activity?.replaceFragmentWithStringData(SecondaryDriverFragment(), mContainerId, carReg, mobile,address,resident)
     }
+
+    fun launchRegisterAdditionalCarFragment(carReg : String, mobile : String, address: String,resident: Resident) {
+        activity?.replaceFragmentWithStringData(AdditionalVehiclesFragment(), mContainerId, carReg, mobile,address,resident)
+    }
+
+
 
 
     private fun checkAdddressDataFromViewModel(){
@@ -294,9 +283,16 @@ class ResidentRegisterFragment  : Fragment(){
                     t -> println("Received UserInfo $t")
 
                if(t!=null){
-                    val resident = getEnteredResidentDetails()
-                    resident.street_address = t.resAddressStreet
-                    registerViewModel.insertResidentInfo(resident)
+
+                   if(secondaryDrivers){
+                       launchRegisterSearchResultFragment(et_carReg.text.toString(),et_mobile.text.toString(), et_address.text.toString(),getEnteredResidentDetails())
+                   }else if(additionalCars){
+                       launchRegisterAdditionalCarFragment(et_carReg.text.toString(),et_mobile.text.toString(), et_address.text.toString(),getEnteredResidentDetails())
+                   }else {
+                       val resident = getEnteredResidentDetails()
+                       resident.street_address = t.resAddressStreet
+                       registerViewModel.insertResidentInfo(resident)
+                   }
 
                 }else {
                     et_address.setError("House number does not Exist")
@@ -317,7 +313,7 @@ class ResidentRegisterFragment  : Fragment(){
     }
 
     fun launchAdditionalCarsFragment() {
-        activity?.replaceFragmentWithNoHistory(AdditionalDriverFragment(), mContainerId)
+        activity?.replaceFragmentWithNoHistory(AdditionalVehiclesFragment(), mContainerId)
     }
 
 
@@ -376,7 +372,7 @@ class ResidentRegisterFragment  : Fragment(){
                     img_car.setImageURI(Uri.fromFile(imgFile))
                     carProfilePhotoPath = currentPhotoPath
                     myList.add(carProfilePhotoPath!!)
-                    floatingActionButton3.visibility=View.VISIBLE
+
 
                 }
 
@@ -390,14 +386,12 @@ class ResidentRegisterFragment  : Fragment(){
 
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        if(!et_carReg.text.toString().isEmpty()) {
+            secondaryDriverViewModel.fetchResidentByCarReg(et_carReg.text.toString())
 
-
-
-
-
-
-
-
-
+        }
+    }
 }

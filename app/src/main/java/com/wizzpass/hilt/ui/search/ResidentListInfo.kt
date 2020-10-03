@@ -96,17 +96,6 @@ class ResidentListInfo : Fragment(), LifecycleOwner , ResidentAdapter.OnItemClic
 
     }
 
-   /* private fun fetchDataFromViewModel(){
-        mainViewModel.userFinalList.observe(this,
-            Observer<MutableList<Student>> {
-                    t -> println("Received UserInfo List $t")
-                list= t as ArrayList<Student>
-                residentAdapter?.refreshAdapter(t)
-            }
-        )
-    }
-
-    */
 
     fun uploadResidentList(residents : ArrayList<Resident>){
         residentAdapter?.refreshAdapter(residents)

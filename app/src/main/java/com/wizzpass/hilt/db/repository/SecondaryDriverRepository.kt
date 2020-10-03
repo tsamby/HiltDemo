@@ -20,11 +20,11 @@ class SecondaryDriverRepository  @Inject constructor(private val secondaryDriver
 
     suspend fun  fetchSecondaryDriversByMobile (searchField : String) = secondaryDriverDao.fetchSecondaryDriverByMobile(searchField)
 
-    suspend fun  fetchSecondaryByAddress (searchField : String) = secondaryDriverDao.fetchAllResidentsLinkedToAddress(searchField)
+    suspend fun  fetchSecondaryByAddress (searchField : String) = secondaryDriverDao.fetchAllSecondaryDriverLinkedToAddress(searchField)
 
-    suspend fun  fetchSecondaryByMobile (searchField : String) = secondaryDriverDao.fetchAllResidentsLinkedToMobile(searchField)
+    suspend fun  fetchSecondaryByMobile (searchField : String) = secondaryDriverDao.fetchAllSecondaryDriverLinkedToMobile(searchField)
 
-    suspend fun  fetchSecondaryByCarReg (searchField : String) = secondaryDriverDao.fetchAllResidentsLinkedToCarReg(searchField)
+    suspend fun  fetchSecondaryByCarReg (searchField : String) = secondaryDriverDao.fetchAllSecondaryDriverLinkedToCarReg(searchField)
 
 
 }

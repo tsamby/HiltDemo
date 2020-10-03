@@ -27,11 +27,11 @@ interface  SecondaryDriverDao{
     fun  fetchSecondaryDriverByMobile(mobile : String) : LiveData<SecondaryDriver>
 
     @Query("select * From secondary_driver WHERE address = :address")
-    fun  fetchAllResidentsLinkedToAddress(address : String) : LiveData<MutableList<SecondaryDriver>>
+    fun  fetchAllSecondaryDriverLinkedToAddress(address : String) : LiveData<MutableList<SecondaryDriver>>
 
     @Query("select * From secondary_driver WHERE mobile = :mobile")
-    fun  fetchAllResidentsLinkedToMobile(mobile: String) : LiveData<MutableList<SecondaryDriver>>
+    fun  fetchAllSecondaryDriverLinkedToMobile(mobile: String) : LiveData<MutableList<SecondaryDriver>>
 
     @Query("select * From secondary_driver WHERE carReg = :carReg")
-    fun  fetchAllResidentsLinkedToCarReg(carReg : String) : LiveData<MutableList<SecondaryDriver>>
+    fun  fetchAllSecondaryDriverLinkedToCarReg(carReg : String) : LiveData<MutableList<SecondaryDriver>>
 }

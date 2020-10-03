@@ -59,4 +59,13 @@ object DBModule {
     @Provides
     fun provideSecondaryDriverDBRepository(secondaryDriverDao: SecondaryDriverDao) = SecondaryDriverRepository(secondaryDriverDao)
 
+    @Provides
+    fun provideVehiclesDao(@ApplicationContext appContext: Context) :VehiclesDao {
+        return ResidentDB.getInstance(appContext).vehiclesDao
+    }
+
+    @Provides
+    fun provideVehiclesDBRepository(vehiclesDao: VehiclesDao) = VehicleDBRepository(vehiclesDao)
+
+
 }
