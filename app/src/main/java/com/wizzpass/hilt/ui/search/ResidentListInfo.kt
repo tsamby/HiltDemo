@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -26,6 +27,7 @@ import com.wizzpass.hilt.util.setBorder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_resident_found.*
 import kotlinx.android.synthetic.main.fragment_resident_list.*
+import kotlinx.android.synthetic.main.fragment_search_result.*
 
 
 @AndroidEntryPoint
@@ -64,9 +66,18 @@ class ResidentListInfo : Fragment(), LifecycleOwner , ResidentAdapter.OnItemClic
         super.onViewCreated(view, savedInstanceState)
         this.lifecycle.addObserver(mainViewModel)
         textView8.setText(residents[0].address + " " + residents[0].street_address)
+
+        imageView5.setOnClickListener {
+            launchSearchFragment()
+        }
+
         setBorder(constraintLayout)
 
         initAdapter()
+    }
+
+    fun launchSearchFragment() {
+        activity?.replaceFragment(SearchFragment(), mContainerId)
     }
 
     override fun onResume() {

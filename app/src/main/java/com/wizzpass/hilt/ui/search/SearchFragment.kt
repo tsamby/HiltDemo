@@ -1,13 +1,12 @@
 package com.wizzpass.hilt.ui.search
 
 import android.os.Bundle
-import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
@@ -17,7 +16,11 @@ import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.register.ResAddressViewModel
 import com.wizzpass.hilt.util.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_register_resident.*
+import kotlinx.android.synthetic.main.fragment_register_resident.bt_register
+import kotlinx.android.synthetic.main.fragment_register_resident.et_address
+import kotlinx.android.synthetic.main.fragment_register_resident.et_carReg
+import kotlinx.android.synthetic.main.fragment_register_resident.et_mobile
+import kotlinx.android.synthetic.main.fragment_search.*
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -46,6 +49,14 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        imageView4.setOnClickListener{
+
+        val intent = activity?.getIntent()
+        activity?.finish()
+        startActivity(intent)
+
+        }
 
         bt_register.setOnClickListener {
             if (!et_carReg.text.toString().isEmpty()) {
@@ -99,7 +110,7 @@ class SearchFragment : Fragment() {
     private fun checkAdddressDataFromViewModel(){
         resAddressViewModel.addressExists.observe(viewLifecycleOwner,
             Observer<ResAddress> {
-                    t -> println("Received UserInfo $t")
+                    t -> println("House Number Received UserInfo $t")
 
                 if(t!=null){
                     registerViewModel.fetchResidentByAddress(et_address.text.toString().substring(0,2))
@@ -177,15 +188,21 @@ class SearchFragment : Fragment() {
     private fun fetchResidentsFromViewModel(){
         registerViewModel.residentsLinkedToSameAddress.observe(viewLifecycleOwner,
             Observer<MutableList<Resident>> {
-                    t -> println("Test ${t}")
+                    t -> println("House number Residents Test ${t}")
                 if(t==null){
-                    launchRegisterSearchResultFragment()
-                }else if(t.size>1){
+
+                    launchRegisterSearchResultFragment(inputString,searchFieldUsed)
+
+                }else if(t.size==1){
+
+                    launchResultWithDataFragment(t[0])
+                }
+
+                else if(t.size>1){
                     var list = arrayListOf<Resident>()
                     list = t as ArrayList<Resident>
                     launchResultWithListDataFragment(list)
                 }else{
-
                     launchRegisterSearchResultFragment(inputString,searchFieldUsed)
                 }
 

@@ -1,35 +1,25 @@
 package com.wizzpass.hilt.ui.search
 
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.Guard
 import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.ui.register.RegisterViewModel
-import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.util.replaceFragment
 import com.wizzpass.hilt.util.setBorder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_guard_login.*
-import kotlinx.android.synthetic.main.fragment_register_resident.*
-import kotlinx.android.synthetic.main.fragment_register_resident.bt_register
-import kotlinx.android.synthetic.main.fragment_register_resident.et_address
-import kotlinx.android.synthetic.main.fragment_register_resident.et_carReg
-import kotlinx.android.synthetic.main.fragment_register_resident.et_mobile
 import kotlinx.android.synthetic.main.fragment_resident_found.*
-import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_resident_found.imageView4
 import kotlinx.android.synthetic.main.fragment_search_result.*
-import kotlinx.android.synthetic.main.fragment_search_result.bt_visitor
 import java.io.File
+import java.util.*
 
 @AndroidEntryPoint
 class ResidentFoundFragment : Fragment() {
@@ -61,6 +51,10 @@ class ResidentFoundFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        imageView4.setOnClickListener {
+            launchSearchFragment()
+        }
+
         setBorder(innerConstraintLayout)
         if(resident!=null) {
             textViewName.setText(resident!!.fName)
@@ -76,12 +70,65 @@ class ResidentFoundFragment : Fragment() {
                     imageView.setImageURI(Uri.fromFile(imgFile))
                 }
                 if (resident!!.carImage != null) {
-                    val imgFile = File(resident!!.carImage)
-                    if (imgFile.exists()) {
-                        imageView2.setColorFilter(null)
-                        imageView2.setImageURI(Uri.fromFile(imgFile))
+
+                    val arr =
+                        ArrayList<String>()
+                    arr.add("Novuyo")
+                    for (i in arr.indices) {
                     }
+
+                    if(resident!!.carImage.size>0){
+                        for (i  in resident!!.carImage.indices){
+                            val imgFile = File(resident!!.carImage[i])
+                            if (i==0){
+                            if (imgFile.exists()) {
+                                imageView2.setColorFilter(null)
+                                imageView2.setImageURI(Uri.fromFile(imgFile))
+                                imageView2.visibility=View.VISIBLE
+                                carImageLabel.visibility = View.VISIBLE
+                            }
+                            }
+
+                            if (i==1){
+                                if (imgFile.exists()) {
+                                    imageViewcar2.setColorFilter(null)
+                                    imageViewcar2.setImageURI(Uri.fromFile(imgFile))
+                                    imageViewcar2.visibility=View.VISIBLE
+                                    textViewcar2.visibility = View.VISIBLE
+                                }
+                            }
+                            if (i==2){
+                                if (imgFile.exists()) {
+                                    imageViewcar3.setColorFilter(null)
+                                    imageViewcar3.setImageURI(Uri.fromFile(imgFile))
+                                    imageViewcar3.visibility=View.VISIBLE
+                                    textViewcar3.visibility = View.VISIBLE
+                                }
+                            }
+                            if (i==3){
+                                if (imgFile.exists()) {
+                                    imageViewcar4.setColorFilter(null)
+                                    imageViewcar4.setImageURI(Uri.fromFile(imgFile))
+                                    imageViewcar4.visibility=View.VISIBLE
+                                    textViewcar4.visibility = View.VISIBLE
+                                }
+                            }
+                            if (i==4){
+                                if (imgFile.exists()) {
+                                    imageViewcar5.setColorFilter(null)
+                                    imageViewcar5.setImageURI(Uri.fromFile(imgFile))
+                                    imageViewcar5.visibility=View.VISIBLE
+                                    textViewcar5.visibility = View.VISIBLE
+                                }
+                            }
+
+                        }
+
+                    }
+
                 }
+
+
             }
         }
 

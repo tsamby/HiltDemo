@@ -9,7 +9,7 @@ import java.lang.reflect.Type
 /**
  * Created by novuyo on 01,October,2020
  */
-object Converters {
+class Converters {
     @TypeConverter
     fun fromString(value: String?): ArrayList<String> {
         val listType: Type = object : TypeToken<ArrayList<String?>?>() {}.getType()

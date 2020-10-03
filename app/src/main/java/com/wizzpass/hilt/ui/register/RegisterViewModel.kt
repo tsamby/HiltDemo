@@ -30,9 +30,6 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
 
     fun insertResidentInfo(resident: Resident) {
         viewModelScope.launch {
-
-
-
             if(resident.fName.isNullOrEmpty() ||
                 resident.lname.isNullOrEmpty() ||
                 resident.address.isNullOrEmpty() ||

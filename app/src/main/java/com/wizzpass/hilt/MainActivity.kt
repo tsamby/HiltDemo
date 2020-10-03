@@ -86,14 +86,14 @@ class MainActivity : AppCompatActivity() {
 
     //i need to figure out how to manage fragments
     override fun onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
+        /*if (doubleBackToExitPressedOnce) {
             super.onBackPressed()
             return
         }
 
         this.doubleBackToExitPressedOnce = true
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
-        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)*/
     }
 
 

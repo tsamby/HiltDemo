@@ -68,6 +68,7 @@ class ResidentRegisterFragment  : Fragment(){
     var carProfilePhotoPath3: String? = ""
     var carProfilePhotoPath4: String? = ""
     var carProfilePhotoPath5: String? = ""
+    var myList: ArrayList<String> = arrayListOf()
 
     val REQUEST_TAKE_PHOTO = 1
     var inputText: String? = ""
@@ -100,6 +101,10 @@ class ResidentRegisterFragment  : Fragment(){
 
 
         setUi(inputText!!,searchText!!)
+
+        imageView6.setOnClickListener {
+            launchSearchFragment()
+        }
 
         bt_register.setOnClickListener {
             checkIfAddressExists()
@@ -162,6 +167,8 @@ class ResidentRegisterFragment  : Fragment(){
 
 
     }
+
+
 
     @SuppressLint("RestrictedApi")
     val clickListener = View.OnClickListener { view ->
@@ -247,7 +254,7 @@ class ResidentRegisterFragment  : Fragment(){
             et_address.text.toString(),
             et_address_street.text.toString(),
             et_name.text.toString(),
-            et_surname.text.toString(), bmprofile!!,bmCar!!
+            et_surname.text.toString(), bmprofile!!,myList!!
         )
 
     }
@@ -377,13 +384,16 @@ class ResidentRegisterFragment  : Fragment(){
                     img_car.setColorFilter(null)
                     img_car.setImageURI(Uri.fromFile(imgFile))
                     carProfilePhotoPath = currentPhotoPath
+                    myList.add(carProfilePhotoPath!!)
                     floatingActionButton3.visibility=View.VISIBLE
 
                 }else if(carImage2){
                     img_car2.setColorFilter(null)
                     img_car2.setImageURI(Uri.fromFile(imgFile))
                     carProfilePhotoPath2 = currentPhotoPath
+                    myList.add(carProfilePhotoPath2!!)
                     floatingActionButton4.visibility =View.VISIBLE
+                    floatingActionButton3.visibility=View.GONE
                     textViewcar2.visibility=View.VISIBLE
                     img_car2.visibility=View.VISIBLE
 
@@ -391,7 +401,9 @@ class ResidentRegisterFragment  : Fragment(){
                     img_car3.setColorFilter(null)
                     img_car3.setImageURI(Uri.fromFile(imgFile))
                     carProfilePhotoPath3 = currentPhotoPath
+                    myList.add(carProfilePhotoPath3!!)
                     floatingActionButton5.visibility=View.VISIBLE
+                    floatingActionButton4.visibility =View.GONE
                     textViewcar3.visibility=View.VISIBLE
                     img_car3.visibility=View.VISIBLE
 
@@ -399,7 +411,9 @@ class ResidentRegisterFragment  : Fragment(){
                     img_car4.setColorFilter(null)
                     img_car4.setImageURI(Uri.fromFile(imgFile))
                     carProfilePhotoPath4 = currentPhotoPath
+                    myList.add(carProfilePhotoPath4!!)
                     floatingActionButton6.visibility=View.VISIBLE
+                    floatingActionButton5.visibility=View.GONE
                     textViewcar4.visibility=View.VISIBLE
                     img_car4.visibility=View.VISIBLE
 
@@ -407,6 +421,7 @@ class ResidentRegisterFragment  : Fragment(){
                     img_car5.setColorFilter(null)
                     img_car5.setImageURI(Uri.fromFile(imgFile))
                     carProfilePhotoPath5 = currentPhotoPath
+                    myList.add(carProfilePhotoPath5!!)
                     textViewcar5.visibility=View.VISIBLE
                     img_car5.visibility=View.VISIBLE
                 }
