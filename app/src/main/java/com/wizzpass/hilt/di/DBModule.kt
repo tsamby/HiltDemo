@@ -3,14 +3,8 @@ package com.wizzpass.hilt.di
 import android.content.Context
 
 import com.wizzpass.hilt.db.ResidentDB
-import com.wizzpass.hilt.db.dao.GuardDao
-import com.wizzpass.hilt.db.dao.ResAddressDao
-import com.wizzpass.hilt.db.dao.ResidentDao
-import com.wizzpass.hilt.db.dao.SupervisorDao
-import com.wizzpass.hilt.db.repository.GuardDBRepository
-import com.wizzpass.hilt.db.repository.ResAddressDBRepository
-import com.wizzpass.hilt.db.repository.ResidentDBRepository
-import com.wizzpass.hilt.db.repository.SupervisorDBRepository
+import com.wizzpass.hilt.db.dao.*
+import com.wizzpass.hilt.db.repository.*
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import dagger.Module
 import dagger.Provides
@@ -56,5 +50,13 @@ object DBModule {
 
     @Provides
     fun provideResSupervisorDBRepository(supervisorDao: SupervisorDao) = SupervisorDBRepository(supervisorDao)
+
+    @Provides
+    fun provideSecondaryDriverDao(@ApplicationContext appContext: Context) :SecondaryDriverDao {
+        return ResidentDB.getInstance(appContext).secondaryDriverDao
+    }
+
+    @Provides
+    fun provideSecondaryDriverDBRepository(secondaryDriverDao: SecondaryDriverDao) = SecondaryDriverRepository(secondaryDriverDao)
 
 }

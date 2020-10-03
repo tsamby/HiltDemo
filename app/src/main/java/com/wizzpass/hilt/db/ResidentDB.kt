@@ -8,16 +8,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.wizzpass.hilt.db.dao.GuardDao
-import com.wizzpass.hilt.db.dao.ResAddressDao
-import com.wizzpass.hilt.db.dao.ResidentDao
-import com.wizzpass.hilt.db.dao.SupervisorDao
-import com.wizzpass.hilt.db.entity.Guard
-import com.wizzpass.hilt.db.entity.ResAddress
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.Supervisor
+import com.wizzpass.hilt.db.dao.*
+import com.wizzpass.hilt.db.entity.*
 
-@Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class], version = 2, exportSchema = false)
+@Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class, SecondaryDriver::class], version = 2, exportSchema = false)
 
 @TypeConverters(Converters::class)
 abstract class ResidentDB : RoomDatabase() {
@@ -28,6 +22,7 @@ abstract class ResidentDB : RoomDatabase() {
     abstract val guardDao : GuardDao
     abstract val supervisorDao : SupervisorDao
     abstract val resAddressDao: ResAddressDao
+    abstract val secondaryDriverDao : SecondaryDriverDao
 
 
 

@@ -88,6 +88,20 @@ fun FragmentActivity.replaceFragmentWithStringData(fragment: Fragment, frameId: 
     }
 }
 
+fun FragmentActivity.replaceFragmentWithStringData(fragment: Fragment, frameId: Int, carReg : String, mobile :String, address : String) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putString("carReg", carReg)
+        bundle.putString("mobile", mobile)
+        bundle.putString("address", address)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+
+    }
+}
+
 fun <T> Context.openActivity(it: Class<T>, extras: Bundle.() -> Unit = {}) {
     var intent = Intent(this, it)
     intent.putExtras(Bundle().apply(extras))

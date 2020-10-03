@@ -23,7 +23,11 @@ data class Resident(
     @Nullable
     val profImage: String,
     @Nullable
-    val carImage: ArrayList<String>
+    val carImage: ArrayList<String>,
+    @Nullable
+    val additonalcarIds: ArrayList<String>,
+    @Nullable
+    val secondaryDriverIds: ArrayList<String>
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
@@ -34,20 +38,25 @@ data class Resident(
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
-        TODO("carImage")
+        TODO("carImage"),
+        TODO("additonalcarIds"),
+        TODO("secondaryDriverIds")
     ) {
     }
 
-    override fun writeToParcel(p0: Parcel?, p1: Int) {
-        TODO("Not yet implemented")
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(resId)
+        parcel.writeString(carReg)
+        parcel.writeString(mobile)
+        parcel.writeString(address)
+        parcel.writeString(street_address)
+        parcel.writeString(fName)
+        parcel.writeString(lname)
+        parcel.writeString(profImage)
     }
 
     override fun describeContents(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun toString(): String {
-        return "Resident(resId=$resId, carReg='$carReg', mobile='$mobile', address='$address', street_address='$street_address', fName='$fName', lname='$lname', profImage='$profImage', carImage=$carImage)"
+        return 0
     }
 
     companion object CREATOR : Parcelable.Creator<Resident> {
@@ -59,9 +68,15 @@ data class Resident(
             return arrayOfNulls(size)
         }
     }
-
-
 }
+
+
+
+
+
+
+
+
 
 
 
