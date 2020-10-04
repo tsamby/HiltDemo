@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +17,13 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.wizzpass.hilt.R
+import com.wizzpass.hilt.adapter.SecondaryDriverAdapter
 import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.db.entity.SecondaryDriver
 import com.wizzpass.hilt.ui.additionalVehicles.AdditionalVehiclesFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.ui.secondaryDrivers.SecondaryDriverFragment
@@ -40,6 +45,7 @@ import kotlinx.android.synthetic.main.fragment_register_resident.img_car
 import kotlinx.android.synthetic.main.fragment_register_resident.img_profile
 import kotlinx.android.synthetic.main.fragment_register_resident.textView5
 import kotlinx.android.synthetic.main.fragment_register_resident_two.*
+import kotlinx.android.synthetic.main.fragment_secondary_drivers.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -50,7 +56,7 @@ import java.util.*
  * Created by novuyo on 20,September,2020
  */
 @AndroidEntryPoint
-class ResidentRegisterFragment  : Fragment(){
+class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClickListener{
 
     private val registerViewModel : RegisterViewModel by viewModels()
     private val resAddressViewModel : ResAddressViewModel by viewModels()
@@ -77,6 +83,10 @@ class ResidentRegisterFragment  : Fragment(){
     var inputText: String? = ""
     var searchText: String? = ""
 
+    private var driversAdapter : SecondaryDriverAdapter? = null
+    var drivers= arrayListOf<SecondaryDriver>()
+    var resident: Resident? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -92,6 +102,18 @@ class ResidentRegisterFragment  : Fragment(){
         inputText = arguments?.getString("inputText")
         searchText = arguments?.getString("searchField")
 
+        //secondaryDriverViewModel.fetchResidentByCarReg("XHXI")
+
+        resident = arguments?.getParcelable("resident")
+        if(resident!=null) {
+            Log.d("RESIDENT", resident.toString())
+            println("RESIDENT ${resident.toString()}")
+            secondaryDriverViewModel.fetchResidentByCarReg(resident!!.carReg)
+            secondaryDriverViewModel.fetchSecondaryDriverData()
+
+        }
+
+
         return  residentInfoView
     }
 
@@ -100,7 +122,7 @@ class ResidentRegisterFragment  : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
 
-        setUi(inputText!!,searchText!!)
+        //setUi(inputText!!,searchText!!)
 
         imageView6.setOnClickListener {
             launchSearchFragment()
@@ -135,7 +157,32 @@ class ResidentRegisterFragment  : Fragment(){
             dispatchTakePictureIntent()
         }
         observeViewModel()
+
+        initAdapter()
     }
+
+    fun uploadDriversList(secondaryDrivers : ArrayList<SecondaryDriver>){
+        driversAdapter?.refreshAdapter(secondaryDrivers)
+    }
+
+
+
+    private fun initAdapter(){
+        driversAdapter = SecondaryDriverAdapter(arrayListOf(), this)
+        recyclerView2.apply {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = driversAdapter
+
+        }
+
+    }
+
+    override fun onItemClick(position: Int) {
+
+
+    }
+
 
 
 
@@ -263,6 +310,30 @@ class ResidentRegisterFragment  : Fragment(){
                 }
             })
 
+        secondaryDriverViewModel.secondaryDriverFinalList.observe(viewLifecycleOwner,
+            Observer<MutableList<SecondaryDriver>> {
+                    t -> println("All sec drivers ${t}")
+                if(t==null){
+
+                }else {
+
+                }
+
+            }
+        )
+
+        secondaryDriverViewModel.secondaryDriversLinkedToSameAddress.observe(viewLifecycleOwner,
+            Observer<MutableList<SecondaryDriver>> {
+                    t -> println("Secondary Drivers Test ${t}")
+                if(t==null){
+
+                }else {
+
+                }
+
+            }
+        )
+
     }
 
 
@@ -389,9 +460,8 @@ class ResidentRegisterFragment  : Fragment(){
     override fun onResume() {
         super.onResume()
 
-        if(!et_carReg.text.toString().isEmpty()) {
-            secondaryDriverViewModel.fetchResidentByCarReg(et_carReg.text.toString())
-
+        if(resident!=null) {
+            secondaryDriverViewModel.fetchResidentByCarReg(resident!!.carReg)
         }
     }
 }

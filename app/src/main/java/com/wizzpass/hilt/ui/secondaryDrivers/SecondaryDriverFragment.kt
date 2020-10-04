@@ -39,6 +39,8 @@ import com.wizzpass.hilt.adapter.AdditionalVehicleAdapter
 import com.wizzpass.hilt.adapter.SecondaryDriverAdapter
 import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.db.entity.Vehicles
+import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
+import com.wizzpass.hilt.util.replaceFragmentWithDataTest
 import kotlinx.android.synthetic.main.fragment_additional_cars.*
 import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_add
 import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_done
@@ -89,8 +91,6 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
         add_reg = arguments?.getString("address")
         resident = arguments?.getParcelable("resident")
 
-        Log.d("RESIDENT",resident.toString())
-        println("RESIDENT ${resident.toString()}")
 
 
 
@@ -125,6 +125,8 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
         }
 
         bt_done.setOnClickListener {
+
+            launchRegisterFragment(resident!!)
 
         }
 
@@ -215,6 +217,12 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
     }
 
 
+    fun launchRegisterFragment(resident: Resident) {
+        activity?.replaceFragmentWithDataTest(ResidentRegisterFragment(), mContainerId,resident)
+    }
+
+
+
 
     private fun dispatchTakePictureIntent() {
 
@@ -278,9 +286,9 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
         val bmprofile = imgProfilePhotoPath
         return SecondaryDriver(
             0L,
-            carRegistration!!,
-            mobile_reg!!,
-            add_reg!!,
+            resident!!.carReg,
+            resident!!.mobile!!,
+            resident!!.address,
             et_name.text.toString(),
             et_surname.text.toString(), bmprofile!!
         )
