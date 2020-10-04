@@ -132,13 +132,19 @@ class SearchFragment : Fragment() {
         activity?.replaceFragment(ResidentFoundFragment(), mContainerId)
     }
 
-    fun launchResultWithDataFragment(resident : Resident) {
-        activity?.replaceFragmentWithDataTest(ResidentFoundFragment(), mContainerId, resident)
+    fun launchResultWithDataFragment(resident : Resident, searchString: String) {
+        activity?.replaceFragmentWithResidentAndSearchField(ResidentFoundFragment(), mContainerId, resident, searchString)
     }
 
     fun launchResultWithListDataFragment(residents :ArrayList<Resident>) {
         activity?.replaceFragmentWithListDataTest(ResidentListInfo(), mContainerId, residents)
     }
+
+    fun launchResultWithListDataFragment(residents :ArrayList<Resident>,searchString: String) {
+        activity?.replaceFragmentWithListDataAndSearchField(ResidentListInfo(), mContainerId, residents, searchString)
+    }
+
+
 
     fun launchRegisterSearchResultFragment(inputText : String, searchString : String) {
         activity?.replaceFragmentWithStringData(SearchResultFragment(), mContainerId, inputText, searchString)
@@ -177,7 +183,7 @@ class SearchFragment : Fragment() {
                     launchRegisterSearchResultFragment(inputString,searchFieldUsed)
                 }else{
 
-                    launchResultWithDataFragment(t)
+                    launchResultWithDataFragment(t,searchFieldUsed)
                 }
 
 
@@ -195,13 +201,13 @@ class SearchFragment : Fragment() {
 
                 }else if(t.size==1){
 
-                    launchResultWithDataFragment(t[0])
+                    launchResultWithDataFragment(t[0],searchFieldUsed)
                 }
 
                 else if(t.size>1){
                     var list = arrayListOf<Resident>()
                     list = t as ArrayList<Resident>
-                    launchResultWithListDataFragment(list)
+                    launchResultWithListDataFragment(list,searchFieldUsed)
                 }else{
                     launchRegisterSearchResultFragment(inputString,searchFieldUsed)
                 }

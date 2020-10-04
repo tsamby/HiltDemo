@@ -18,6 +18,7 @@ public class SecondaryDriverViewModel@ViewModelInject constructor(private val se
     private val  error = MutableLiveData<String>()
     var secondaryDriverFinalList: LiveData<MutableList<SecondaryDriver>> = MutableLiveData<MutableList<SecondaryDriver>>()
     var secondaryDriversLinkedToSameAddress : LiveData<MutableList<SecondaryDriver>> = MutableLiveData<MutableList<SecondaryDriver>>()
+    var secondaryDriversLinkedToCar : LiveData<MutableList<SecondaryDriver>> = MutableLiveData<MutableList<SecondaryDriver>>()
     var secondaryDriverFound: LiveData<SecondaryDriver> = MutableLiveData<SecondaryDriver>()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -69,9 +70,9 @@ public class SecondaryDriverViewModel@ViewModelInject constructor(private val se
 
     }
 
-    fun fetchResidentByCarReg(searchField : String){
+    fun fetchSecondaryDriversByCarReg(searchField : String){
         viewModelScope.launch {
-            secondaryDriversLinkedToSameAddress = secondaryDriverRepository.fetchSecondaryByCarReg(searchField)
+            secondaryDriversLinkedToCar = secondaryDriverRepository.fetchSecondaryByCarReg(searchField)
         }
 
 

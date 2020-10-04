@@ -23,6 +23,7 @@ interface  SecondaryDriverDao{
     @Query("select * From secondary_driver WHERE carReg = :carReg LIMIT 1")
     fun  fetchSecondaryDriverCarReg(carReg : String) : LiveData<SecondaryDriver>
 
+
     @Query("select * From secondary_driver WHERE mobile = :mobile LIMIT 1")
     fun  fetchSecondaryDriverByMobile(mobile : String) : LiveData<SecondaryDriver>
 

@@ -60,12 +60,42 @@ fun FragmentActivity.replaceFragmentWithDataTest(fragment: Fragment, frameId: In
     }
 }
 
+fun FragmentActivity.replaceFragmentWithResidentAndSearchField(fragment: Fragment, frameId: Int, resident : Resident, searchString: String) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putParcelable("resident", resident)
+        bundle.putString("searchField", searchString)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        transaction.replace(frameId, fragment)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //transaction.commit()
+    }
+}
+
 
 fun FragmentActivity.replaceFragmentWithListDataTest(fragment: Fragment, frameId: Int, resident : ArrayList<Resident>) {
     supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
     supportFragmentManager.inTransactionWithoutHistoryData {
         val bundle = Bundle()
         bundle.putParcelableArrayList("resident", resident)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        //transaction.replace(frameId, fragment)
+        //transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //transaction.commit()
+    }
+}
+
+fun FragmentActivity.replaceFragmentWithListDataAndSearchField(fragment: Fragment, frameId: Int, resident : ArrayList<Resident>,searchString :String) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putParcelableArrayList("resident", resident)
+        bundle.putString("searchField", searchString)
         val transaction = supportFragmentManager.beginTransaction()
         fragment.arguments = bundle
         //transaction.replace(frameId, fragment)

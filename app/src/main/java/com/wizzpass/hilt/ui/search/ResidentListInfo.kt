@@ -23,6 +23,7 @@ import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.util.replaceFragment
 import com.wizzpass.hilt.util.replaceFragmentWithDataTest
+import com.wizzpass.hilt.util.replaceFragmentWithResidentAndSearchField
 import com.wizzpass.hilt.util.setBorder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_resident_found.*
@@ -37,6 +38,7 @@ class ResidentListInfo : Fragment(), LifecycleOwner , ResidentAdapter.OnItemClic
     var mContainerId:Int = -1
     private var residentAdapter : ResidentAdapter? = null
     var residents = arrayListOf<Resident>()
+    var searchText: String? = ""
 
     private val mainViewModel :  RegisterViewModel by viewModels()
 
@@ -57,7 +59,11 @@ class ResidentListInfo : Fragment(), LifecycleOwner , ResidentAdapter.OnItemClic
     ): View? {
         residentInfoListView = inflater.inflate(R.layout.fragment_resident_list, container, false)
         mContainerId = container?.id?:-1
+
+
         residents = arguments?.getParcelableArrayList<Resident>("resident") as ArrayList<Resident>
+        searchText = arguments?.getString("searchField")
+
         return  residentInfoListView
     }
 
@@ -109,5 +115,9 @@ class ResidentListInfo : Fragment(), LifecycleOwner , ResidentAdapter.OnItemClic
 
     fun launchResultWithDataFragment(resident : Resident) {
         activity?.replaceFragmentWithDataTest(ResidentFoundFragment(), mContainerId, resident)
+    }
+
+    fun launchResultWithDataFragment(resident : Resident, searchString: String) {
+        activity?.replaceFragmentWithResidentAndSearchField(ResidentFoundFragment(), mContainerId, resident,searchString)
     }
 }

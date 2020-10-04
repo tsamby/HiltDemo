@@ -46,6 +46,7 @@ import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_add
 import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_done
 import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_save
 
+
 /**
  * Created by novuyo on 03,October,2020
  */
@@ -116,6 +117,7 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
             bt_add.visibility=View.GONE
             bt_done.visibility = View.GONE
             bt_save.visibility = View.VISIBLE
+            bt_cancel.visibility = View.VISIBLE
             et_name.setText("")
             et_surname.setText("")
             img_profile.setColorFilter(null)
@@ -183,8 +185,11 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
                         bt_add.visibility=View.VISIBLE
                         bt_done.visibility = View.VISIBLE
                         bt_save.visibility = View.GONE
+                        bt_cancel.visibility = View.GONE
                         drivers.add(getEnteredSecondaryDriverDetails())
+
                         uploadDriversList(drivers)
+                        textViewadd.visibility = View.VISIBLE
 
 
                     }
@@ -195,20 +200,6 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
 
             })
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -270,8 +261,9 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
             val imgFile = File(currentPhotoPath)
             if (imgFile.exists()) {
                 if(profImage) {
-                    img_profile.setColorFilter(null)
-                    //img_profile.setImageDrawable(null)
+
+                    img_profile.setBackgroundResource(0);
+                    //img_profile.setImageResource(android.R.color.transparent)
                     img_profile.setImageURI(Uri.fromFile(imgFile))
                     imgProfilePhotoPath = currentPhotoPath
 
@@ -286,9 +278,9 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
         val bmprofile = imgProfilePhotoPath
         return SecondaryDriver(
             0L,
-            resident!!.carReg,
-            resident!!.mobile!!,
-            resident!!.address,
+            resident!!.carReg.trim(),
+            resident!!.mobile!!.trim(),
+            resident!!.address.trim(),
             et_name.text.toString(),
             et_surname.text.toString(), bmprofile!!
         )

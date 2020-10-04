@@ -1,13 +1,16 @@
 package com.wizzpass.hilt.adapter
 
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.db.entity.SecondaryDriver
+import kotlinx.android.synthetic.main.fragment_register_resident.*
 import kotlinx.android.synthetic.main.secondary_driver_list_item.view.*
+import java.io.File
 
 class SecondaryDriverAdapter(
     var postList : ArrayList<SecondaryDriver>,
@@ -31,14 +34,20 @@ class SecondaryDriverAdapter(
     inner class PostViewHolder(view : View) : RecyclerView.ViewHolder(view), View.OnClickListener{
 
         private val  sec_driver_name = view.secondarydriver_name
+        private val  prof_img = view.imageView7
 
         init {
             view.setOnClickListener(this)
         }
 
 
-        fun  bind(model : SecondaryDriver){
+        fun  bind(model : SecondaryDriver) {
             sec_driver_name.text = model.fName.toString() + " " + model.lname
+            val imgFile = File(model.profImage)
+            if (imgFile.exists()) {
+                prof_img.setColorFilter(null)
+                prof_img.setImageURI(Uri.fromFile(imgFile))
+            }
         }
 
         override fun onClick(p0: View?) {

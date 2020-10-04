@@ -104,14 +104,9 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
 
         //secondaryDriverViewModel.fetchResidentByCarReg("XHXI")
 
-        resident = arguments?.getParcelable("resident")
-        if(resident!=null) {
-            Log.d("RESIDENT", resident.toString())
-            println("RESIDENT ${resident.toString()}")
-            secondaryDriverViewModel.fetchResidentByCarReg(resident!!.carReg)
-            secondaryDriverViewModel.fetchSecondaryDriverData()
 
-        }
+        resident = arguments?.getParcelable("resident")
+
 
 
         return  residentInfoView
@@ -122,7 +117,9 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
         super.onViewCreated(view, savedInstanceState)
 
 
-        //setUi(inputText!!,searchText!!)
+        if(resident==null) {
+            setUi(inputText!!, searchText!!)
+        }
 
         imageView6.setOnClickListener {
             launchSearchFragment()
@@ -156,6 +153,16 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
             profImage = false
             dispatchTakePictureIntent()
         }
+
+        if(resident!=null) {
+            Log.d("RESIDENT", resident.toString())
+            println("RESIDENT ${resident.toString()}")
+            uploadResidentData(resident!!)
+            secondaryDriverViewModel.fetchSecondaryDriversByCarReg(resident!!.carReg)
+
+        }
+
+
         observeViewModel()
 
         initAdapter()
@@ -183,11 +190,6 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
 
     }
 
-
-
-
-
-
     fun setUi(inputText : String, searchField : String){
 
         if(searchField.equals("car_reg")){
@@ -201,6 +203,50 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
         if(searchField.equals("address")){
             et_address.setText(inputText)
         }
+    }
+
+    fun uploadResidentData(resident: Resident){
+
+        if (et_name.text.toString().isEmpty()) {
+            et_name.setText(resident.fName)
+        }
+
+        if (et_surname.text.toString().isEmpty()) {
+            et_surname.setText(resident.lname)
+        }
+
+        if (et_address.text.toString().isEmpty()) {
+            et_address.setText(resident.address)
+        }
+
+        if (et_address_street.text.toString().isEmpty()) {
+            et_address_street.setText(resident.street_address)
+        }
+
+
+        val imgFile = File(resident.profImage)
+        if (imgFile.exists()) {
+            img_profile.setColorFilter(null)
+            img_profile.setImageURI(Uri.fromFile(imgFile))
+            imgProfilePhotoPath = resident.profImage
+        }
+
+        if(resident.carImage.size>0){
+            val imgFile = File(resident.carImage[0])
+            img_car.setColorFilter(null)
+            img_car.setImageURI(Uri.fromFile(imgFile))
+            carProfilePhotoPath = resident.carImage[0]
+            myList.add(carProfilePhotoPath!!)
+        }
+
+        if(resident.mobile!=null){
+            et_mobile.setText(resident.mobile)
+        }
+
+        if(resident.carReg!=null){
+            et_carReg.setText(resident.carReg)
+        }
+
     }
 
     fun checkIfAddressExists(){
@@ -322,17 +368,23 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
             }
         )
 
-        secondaryDriverViewModel.secondaryDriversLinkedToSameAddress.observe(viewLifecycleOwner,
+        secondaryDriverViewModel.secondaryDriversLinkedToCar.observe(viewLifecycleOwner,
             Observer<MutableList<SecondaryDriver>> {
                     t -> println("Secondary Drivers Test ${t}")
                 if(t==null){
 
                 }else {
 
+                    println("Secondary Drivers Test WE GOT HERE")
+                    textView15.visibility = View.VISIBLE
+                    recyclerView2.visibility = View.VISIBLE
+                    uploadDriversList(t as ArrayList<SecondaryDriver>)
                 }
 
             }
         )
+
+
 
     }
 
@@ -346,7 +398,19 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
     }
 
 
+private fun findSecondaryDriver(){
+    secondaryDriverViewModel.secondaryDriverFound.observe(viewLifecycleOwner,
+        Observer<SecondaryDriver> {
+                t -> println("Secondary Driver Test ${t}")
+            if(t==null){
 
+            }else {
+
+            }
+
+        }
+    )
+}
 
     private fun checkAdddressDataFromViewModel(){
         resAddressViewModel.addressExists.observe(viewLifecycleOwner,
@@ -460,8 +524,11 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
     override fun onResume() {
         super.onResume()
 
-        if(resident!=null) {
-            secondaryDriverViewModel.fetchResidentByCarReg(resident!!.carReg)
-        }
+        /*if(resident!=null) {
+            //secondaryDriverViewModel.fetchSecondaryDriversByCarReg(resident!!.carReg)
+            secondaryDriverViewModel.fetchSecondaryDriversByCarReg("CV70SBGP ")
+        }*/
+
+
     }
 }

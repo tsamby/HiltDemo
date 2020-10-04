@@ -144,7 +144,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/layout_surname" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/textViewadd"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -152,6 +152,7 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/img_profile" />
@@ -165,7 +166,7 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView13" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewadd" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -175,15 +176,16 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_save"
-        android:layout_width="346dp"
+        android:layout_width="173dp"
         android:layout_height="53dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:gravity="center"
         android:text="SAVE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
 
     <TextView
@@ -237,6 +239,18 @@
         app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toBottomOf="@+id/scrollView3"
         app:layout_constraintTop_toTopOf="@+id/bt_save" />
+
+    <Button
+        android:id="@+id/bt_cancel"
+        android:layout_width="173dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:text="CANCEL"
+        app:layout_constraintBottom_toBottomOf="@+id/bt_save"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bt_add" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
