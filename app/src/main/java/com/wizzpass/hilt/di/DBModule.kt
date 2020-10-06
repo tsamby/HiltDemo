@@ -67,5 +67,13 @@ object DBModule {
     @Provides
     fun provideVehiclesDBRepository(vehiclesDao: VehiclesDao) = VehicleDBRepository(vehiclesDao)
 
+    @Provides
+    fun provideVisitorDao(@ApplicationContext appContext: Context) :VisitorDao {
+        return ResidentDB.getInstance(appContext).visitorDao
+    }
+
+    @Provides
+    fun provideVisitorDBRepository(visitorDao: VisitorDao) = VisitorDBRepository(visitorDao)
+
 
 }

@@ -12,11 +12,19 @@ import androidx.room.PrimaryKey
 data class Visitor(
     @PrimaryKey(autoGenerate = true)
     val visId: Long = 0L,
-    val resCarReg: String,
-    val resMobile: String,
-    val resAddress: String,
-    var visMobile: String,
     val visCarReg: String,
+    val visMobile: String,
+    var resAddress: String,
+    var res_street_address : String,
+    val vis_fName: String,
+    val vis_lname: String,
+    @Nullable
+    val vis_profImage: String,
+    @Nullable
+    var vis_carImage: ArrayList<String>,
+    var reasonForVist : String,
     val visEntryTimeStamp: String,
-    val visExitTimeStamp: String
+    val visExitTimeStamp: String,
+    val residentId: String
 )
+

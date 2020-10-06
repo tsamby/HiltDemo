@@ -1,19 +1,21 @@
 package com.wizzpass.hilt.ui.search
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.db.entity.Visitor
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.register.ResAddressViewModel
+import com.wizzpass.hilt.ui.visitor.CurrentVistorsFragment
+import com.wizzpass.hilt.ui.visitor.VisitorDetailsFragment
 import com.wizzpass.hilt.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_register_resident.bt_register
@@ -21,6 +23,8 @@ import kotlinx.android.synthetic.main.fragment_register_resident.et_address
 import kotlinx.android.synthetic.main.fragment_register_resident.et_carReg
 import kotlinx.android.synthetic.main.fragment_register_resident.et_mobile
 import kotlinx.android.synthetic.main.fragment_search.*
+import android.view.Menu as Menu1
+
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -32,9 +36,14 @@ class SearchFragment : Fragment() {
     var mContainerId:Int = -1
     var searchFieldUsed : String = ""
     var inputString : String = ""
+    var visInputString : String = ""
+    var isVisitor : Boolean = false
+    var inputText: String? = ""
+    var searchText: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -44,11 +53,26 @@ class SearchFragment : Fragment() {
     ): View? {
         searchView = inflater.inflate(R.layout.fragment_search, container, false)
         mContainerId = container?.id?:-1
+
+        if(arguments!=null) {
+            isVisitor = arguments?.getBoolean("isVisitor", false)!!
+            println("isVisitor ${isVisitor}")
+            visInputString = arguments?.getString("inputText").toString()
+            inputText = arguments?.getString("inputText")
+            searchText = arguments?.getString("searchField")
+        }
+
         return  searchView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        if(isVisitor){
+            layout_carReg.visibility = View.GONE
+            textView4.visibility = View.GONE
+        }
 
         imageView4.setOnClickListener{
 
@@ -95,7 +119,14 @@ class SearchFragment : Fragment() {
 
 
         }
+
+
+        buttonViewCurrentParkers.setOnClickListener {
+            launchCuurentVisitorsFragment()
+        }
     }
+
+
 
     fun checkIfAddressExists(){
         if(!et_address.text.toString().isEmpty()) {
@@ -132,8 +163,22 @@ class SearchFragment : Fragment() {
         activity?.replaceFragment(ResidentFoundFragment(), mContainerId)
     }
 
+    fun launchCuurentVisitorsFragment() {
+        activity?.replaceFragment(CurrentVistorsFragment(), mContainerId)
+    }
+
     fun launchResultWithDataFragment(resident : Resident, searchString: String) {
         activity?.replaceFragmentWithResidentAndSearchField(ResidentFoundFragment(), mContainerId, resident, searchString)
+    }
+
+    /*fun launchVisitorDetailWithDataFragment(resident : Resident, searchString: String) {
+        activity?.replaceFragmentWithResidentAndSearchField(ResidentFoundFragment(), mContainerId, resident, searchString)
+    }
+
+     */
+
+    fun launchVisitorDetailWithDataFragmentFound(resident : Resident, inputText : String ,searchString: String) {
+        activity?.replaceFragmentWithResidentAndSearchFieldVisitor(VisitorDetailsFragment(), mContainerId, resident, inputText,searchString)
     }
 
     fun launchResultWithListDataFragment(residents :ArrayList<Resident>) {
@@ -144,10 +189,19 @@ class SearchFragment : Fragment() {
         activity?.replaceFragmentWithListDataAndSearchField(ResidentListInfo(), mContainerId, residents, searchString)
     }
 
+    fun launchResultWithListDataFragment(residents :ArrayList<Resident>,searchString: String, isVisitor:Boolean) {
+        activity?.replaceFragmentWithListDataAndSearchFieldVisitor(ResidentListInfo(), mContainerId, residents, searchString, isVisitor)
+    }
+
+
 
 
     fun launchRegisterSearchResultFragment(inputText : String, searchString : String) {
         activity?.replaceFragmentWithStringData(SearchResultFragment(), mContainerId, inputText, searchString)
+    }
+
+    fun launchVisitorDetailsFragment(inputText : String, searchString : String) {
+        activity?.replaceFragmentWithStringData(VisitorDetailsFragment(), mContainerId, inputText, searchString)
     }
 
 
@@ -180,10 +234,24 @@ class SearchFragment : Fragment() {
             Observer<Resident> {
                     t -> println("Received UserInfo2 List ${t}")
                 if(t==null){
-                    launchRegisterSearchResultFragment(inputString,searchFieldUsed)
+
+                    if(isVisitor){
+                      //  launchVisitorDetailsFragment(inputString, "")
+                        showErrorDialog()
+
+                    }else {
+                        launchRegisterSearchResultFragment(inputString, searchFieldUsed)
+                    }
                 }else{
 
-                    launchResultWithDataFragment(t,searchFieldUsed)
+                    if(isVisitor){
+
+                        //launchVisitorDetailWithDataFragmentFound(t, inputString)
+                        launchVisitorDetailWithDataFragmentFound(t, inputText!!, searchText!!)
+
+                    }else {
+                        launchResultWithDataFragment(t, searchFieldUsed)
+                    }
                 }
 
 
@@ -193,28 +261,72 @@ class SearchFragment : Fragment() {
 
     private fun fetchResidentsFromViewModel(){
         registerViewModel.residentsLinkedToSameAddress.observe(viewLifecycleOwner,
-            Observer<MutableList<Resident>> {
-                    t -> println("House number Residents Test ${t}")
-                if(t==null){
+            Observer<MutableList<Resident>> { t ->
+                println("House number Residents Test ${t}")
+                if (t == null) {
 
-                    launchRegisterSearchResultFragment(inputString,searchFieldUsed)
+                    if (isVisitor) {
+                        //  launchVisitorDetailsFragment(inputString, "")
+                        showErrorDialog()
+                    } else {
+                        launchRegisterSearchResultFragment(inputString, searchFieldUsed)
+                    }
 
-                }else if(t.size==1){
+                } else if (t.size == 1) {
 
-                    launchResultWithDataFragment(t[0],searchFieldUsed)
-                }
+                    if (isVisitor) {
+                        launchVisitorDetailWithDataFragmentFound(t[0], inputText!!, searchText!!)
+                    } else {
 
-                else if(t.size>1){
+                        launchResultWithDataFragment(t[0], searchFieldUsed)
+                    }
+                } else if (t.size > 1) {
+
                     var list = arrayListOf<Resident>()
                     list = t as ArrayList<Resident>
-                    launchResultWithListDataFragment(list,searchFieldUsed)
-                }else{
-                    launchRegisterSearchResultFragment(inputString,searchFieldUsed)
-                }
 
+                    if (isVisitor) {
+
+                        launchResultWithListDataFragment(list, searchFieldUsed, isVisitor)
+                    } else {
+
+                        launchResultWithListDataFragment(list, searchFieldUsed)
+                    }
+                } else {
+                    //launchRegisterSearchResultFragment(inputString,searchFieldUsed)
+
+                    if (isVisitor) {
+                        launchVisitorDetailWithDataFragmentFound(t[0], inputText!!, searchText!!)
+                    } else {
+                        launchResultWithDataFragment(t[0], searchFieldUsed)
+                    }
+
+                }
             }
         )
     }
 
+    fun showErrorDialog() {
+
+        var dialogBuilder = android.app.AlertDialog.Builder(context).create()
+        val inflater = this.layoutInflater
+        val dialogView: View = inflater.inflate(R.layout.custom_error_dialog, null)
+        val textView = dialogView.findViewById<View>(R.id.textView9) as TextView
+        val button1 = dialogView.findViewById<View>(R.id.button) as Button
+
+
+        button1.setOnClickListener { view ->
+
+            dialogBuilder.dismiss()
+        }
+        dialogBuilder!!.setView(dialogView)
+        dialogBuilder!!.show()
+        dialogBuilder!!.setOnCancelListener {
+
+
+        }
+
+
+    }
 
     }

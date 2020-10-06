@@ -16,8 +16,10 @@ import com.wizzpass.hilt.R
 import com.wizzpass.hilt.db.entity.Supervisor
 import com.wizzpass.hilt.ui.login.SupervisorViewModel
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
+import com.wizzpass.hilt.ui.visitor.VisitorDetailsFragment
 import com.wizzpass.hilt.util.replaceFragment
 import com.wizzpass.hilt.util.replaceFragmentWithStringData
+import com.wizzpass.hilt.util.replaceFragmentWithStringDataForVisitor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search_result.*
 
@@ -49,8 +51,7 @@ class SearchResultFragment : Fragment() {
 
         inputText = arguments?.getString("inputText")
         searchText = arguments?.getString("searchField")
-        Log.d("test", inputText!!)
-        Log.d("test", searchText!!)
+
 
 
         return  searchView
@@ -68,7 +69,8 @@ class SearchResultFragment : Fragment() {
         }
 
         bt_visitor.setOnClickListener {
-
+            //launchRegisterVisitorDetailsFragment(inputText!!, searchText!!)
+            launchRegisterVisitorDetailsFragment(inputText!!, searchText!!, true)
         }
 
     }
@@ -87,6 +89,10 @@ class SearchResultFragment : Fragment() {
 
     fun launchRegisterSearchResultFragment(inputText : String, searchString : String) {
         activity?.replaceFragmentWithStringData(ResidentRegisterFragment(), mContainerId, inputText, searchString)
+    }
+
+    fun launchRegisterVisitorDetailsFragment(inputText : String, searchString : String, isVisitor : Boolean) {
+        activity?.replaceFragmentWithStringDataForVisitor(SearchFragment(), mContainerId, inputText, searchString, isVisitor)
     }
 
     fun showSupervisorDialog() {

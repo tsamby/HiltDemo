@@ -11,7 +11,7 @@ import androidx.room.TypeConverters
 import com.wizzpass.hilt.db.dao.*
 import com.wizzpass.hilt.db.entity.*
 
-@Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class, SecondaryDriver::class,Vehicles::class], version = 2, exportSchema = false)
+@Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class, SecondaryDriver::class,Vehicles::class, Visitor::class], version = 4, exportSchema = false)
 
 @TypeConverters(Converters::class)
 abstract class ResidentDB : RoomDatabase() {
@@ -24,6 +24,7 @@ abstract class ResidentDB : RoomDatabase() {
     abstract val resAddressDao: ResAddressDao
     abstract val secondaryDriverDao : SecondaryDriverDao
     abstract val vehiclesDao : VehiclesDao
+    abstract val visitorDao : VisitorDao
 
 
 

@@ -75,6 +75,22 @@ fun FragmentActivity.replaceFragmentWithResidentAndSearchField(fragment: Fragmen
     }
 }
 
+fun FragmentActivity.replaceFragmentWithResidentAndSearchFieldVisitor(fragment: Fragment, frameId: Int, resident : Resident,inputText :String, searchString: String) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putParcelable("resident", resident)
+        bundle.putString("inputText", inputText)
+        bundle.putString("searchField", searchString)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        transaction.replace(frameId, fragment)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //transaction.commit()
+    }
+}
+
 
 fun FragmentActivity.replaceFragmentWithListDataTest(fragment: Fragment, frameId: Int, resident : ArrayList<Resident>) {
     supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
@@ -105,12 +121,43 @@ fun FragmentActivity.replaceFragmentWithListDataAndSearchField(fragment: Fragmen
     }
 }
 
+fun FragmentActivity.replaceFragmentWithListDataAndSearchFieldVisitor(fragment: Fragment, frameId: Int, resident : ArrayList<Resident>,searchString :String, isVisitor : Boolean) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putParcelableArrayList("resident", resident)
+        bundle.putString("searchField", searchString)
+        bundle.putBoolean("isVisitor", isVisitor)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        //transaction.replace(frameId, fragment)
+        //transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //transaction.commit()
+    }
+}
+
+
 fun FragmentActivity.replaceFragmentWithStringData(fragment: Fragment, frameId: Int, inputext : String, searchString :String) {
     supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
     supportFragmentManager.inTransactionWithoutHistoryData {
         val bundle = Bundle()
         bundle.putString("inputText", inputext)
         bundle.putString("searchField", searchString)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+
+    }
+}
+
+fun FragmentActivity.replaceFragmentWithStringDataForVisitor(fragment: Fragment, frameId: Int, inputext : String, searchString :String, isVisitor : Boolean) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putString("inputText", inputext)
+        bundle.putString("searchField", searchString)
+        bundle.putBoolean("isVisitor", isVisitor)
         val transaction = supportFragmentManager.beginTransaction()
         fragment.arguments = bundle
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
