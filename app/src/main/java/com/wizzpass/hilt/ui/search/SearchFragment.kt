@@ -84,16 +84,24 @@ class SearchFragment : Fragment() {
 
         bt_register.setOnClickListener {
             if (!et_carReg.text.toString().isEmpty()) {
+
+
                 searchFieldUsed = "car_reg"
                 inputString = et_carReg.text.toString()
                 registerViewModel.fetchResidentByCarReg(et_carReg.text.toString())
                 fetchResidentFromViewModel()
 
             } else if (!et_mobile.text.toString().isEmpty()) {
-                searchFieldUsed = "mobile"
-                inputString = et_mobile.text.toString()
-                registerViewModel.fetchResidentByMobile(et_mobile.text.toString())
-                fetchResidentFromViewModel()
+
+                if(et_mobile.text.toString().length<10){
+                    et_mobile.setError("Mobile number entered is incorrect")
+                }else {
+
+                    searchFieldUsed = "mobile"
+                    inputString = et_mobile.text.toString()
+                    registerViewModel.fetchResidentByMobile(et_mobile.text.toString())
+                    fetchResidentFromViewModel()
+                }
 
             } else if (!et_address.text.toString().isEmpty()) {
 

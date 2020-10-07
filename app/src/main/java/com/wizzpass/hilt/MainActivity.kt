@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
+import android.telephony.SmsManager
 import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
@@ -29,6 +29,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         checkAndroidVersion()
+
+
+
         replaceFragmentWithNoHistory(GuardLoginFragment(), R.id.container_fragment)
     }
 
@@ -52,6 +55,10 @@ class MainActivity : AppCompatActivity() {
             this,
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
+        val sms = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.SEND_SMS
+        )
         val listPermissionsNeeded: MutableList<String> =
             ArrayList()
         if (wtite != PackageManager.PERMISSION_GRANTED) {
@@ -62,6 +69,9 @@ class MainActivity : AppCompatActivity() {
         }
         if (read != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        if (sms != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.SEND_SMS)
         }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(
@@ -95,6 +105,8 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
         Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)*/
     }
+
+
 
 
 

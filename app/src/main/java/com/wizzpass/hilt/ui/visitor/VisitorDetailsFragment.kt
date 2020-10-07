@@ -1,5 +1,6 @@
 package com.wizzpass.hilt.ui.visitor
 
+import android.Manifest
 import com.wizzpass.hilt.db.entity.Visitor
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.register.ResAddressViewModel
@@ -10,18 +11,21 @@ import com.wizzpass.hilt.ui.register.ResAddressViewModel
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.telephony.SmsManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.Nullable
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -55,6 +59,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by novuyo on 06,October,2020
@@ -92,6 +97,8 @@ class VisitorDetailsFragment  : Fragment(){
     private var driversAdapter : SecondaryDriverAdapter? = null
     var drivers= arrayListOf<SecondaryDriver>()
     var resident: Resident? = null
+    var reasons= arrayOf<String>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,21 +156,23 @@ class VisitorDetailsFragment  : Fragment(){
             println("RESIDENT ${resident.toString()}")
 
         }
-        val languages = resources.getStringArray(R.array.Reasons)
+
+        reasons = resources.getStringArray(R.array.Reasons)
+
         if (spinner != null) {
             val adapter = ArrayAdapter(requireContext(),
-                android.R.layout.simple_spinner_item, languages)
+                android.R.layout.simple_spinner_item, reasons)
             spinner.adapter = adapter
 
             spinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
                                             view: View, position: Int, id: Long) {
-                    Toast.makeText(context,
+                    /*Toast.makeText(context,
                         getString(R.string.selected_item) + " " +
-                                "" + languages[position], Toast.LENGTH_SHORT).show()
+                                "" + reasons[position], Toast.LENGTH_SHORT).show()*/
 
-                    reasonFroVisit = languages[position]
+                    reasonFroVisit = reasons[position]
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -256,21 +265,20 @@ class VisitorDetailsFragment  : Fragment(){
     fun getEnteredVisitorDetails() : Visitor {
 
         val bmprofile = imgProfilePhotoPath
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Visitor(
-                0L,
-                et_carReg.text.toString(),
-                et_mobile.text.toString(),
-                et_address.text.toString(),
-                et_address_street.text.toString(),
-                et_name.text.toString(),
-                et_surname.text.toString(), bmprofile!!,myList!!,reasonFroVisit!!,
-                LocalDateTime.now().toString(),"",resident!!.resId.toString()
-            )
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Visitor(
+                    0L,
+                    et_carReg.text.toString(),
+                    et_mobile.text.toString(),
+                    et_address.text.toString(),
+                    et_address_street.text.toString(),
+                    et_name.text.toString(),
+                    et_surname.text.toString(), bmprofile!!, myList!!, reasonFroVisit!!,
+                    LocalDateTime.now().toString(), "", resident!!.resId.toString()
+                )
+            } else {
+                TODO("VERSION.SDK_INT < O")
+            }
 
     }
 
@@ -301,14 +309,39 @@ class VisitorDetailsFragment  : Fragment(){
                     if (imgProfilePhotoPath.toString().isEmpty()) {
                         textView5.setTextColor(Color.RED)
                     }
+
+                    if(reasonFroVisit.equals("Please choose reason for visit")){
+                     Toast.makeText(context, "Please choose reason for visit", Toast.LENGTH_SHORT).show()
+                    }
                 }
             })
+
 
         visitorDetailsViewModel.fetchInsertedId().observe(viewLifecycleOwner,
             Observer<Long> { t ->
                 if(t != -1L){
                     Toast.makeText(activity,"Visitor details captured", Toast.LENGTH_LONG).show()
                     activity?.let{
+
+                        var mobile = "+27" + resident!!.mobile.substring(1)
+                        var message = ""
+
+                        if(reasonFroVisit.equals("Delivery/Collection")){
+                             message = "Hi " + resident!!.fName +"," + getEnteredVisitorDetails().vis_fName + "has arrived with your delivery/collection."
+                        }else if(reasonFroVisit.equals("Visiting")){
+                             message = "Hi " + resident!!.fName +", "+" Your visitor " + getEnteredVisitorDetails().vis_fName + " has arrived."
+                        }else{
+                            message = "Hi " + resident!!.fName +", " + getEnteredVisitorDetails().vis_fName + " is here to see you."
+                        }
+
+                        Log.d("errorMobile", mobile)
+                        Log.d("errorMessage", message)
+
+
+
+
+                        sendSmsMsgFnc(mobile,message )
+
                         launchSearchFragment()
                     }
                 }else{
@@ -346,10 +379,13 @@ class VisitorDetailsFragment  : Fragment(){
                         if (imgProfilePhotoPath.toString().isEmpty()) {
                             textView5.setTextColor(Color.RED)
                         }
+
+                        if(reasonFroVisit.equals("Please choose reason for visit")){
+                            Toast.makeText(context, "Please choose reason for visit", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }else{
-                    //launchRegisterSearchResultFragment(et_carReg.text.toString(),et_mobile.text.toString(), et_address.text.toString())
-                    //launchSearchFragment()
+
                 }
             })
 
@@ -372,10 +408,18 @@ class VisitorDetailsFragment  : Fragment(){
             Observer<ResAddress> {
                     t -> println("Received UserInfo $t")
 
-                if(t!=null){
-                        val visitor = getEnteredVisitorDetails()
-                        visitor.res_street_address = t.resAddressStreet
-                        visitorDetailsViewModel.insertVisitorInfo(visitor)
+                if(t!=null) {
+
+                    if (reasonFroVisit.equals("Please choose reason for visit")) {
+                        Toast.makeText(
+                            context, "Please select reaon for visit",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else{
+                    val visitor = getEnteredVisitorDetails()
+                    visitor.res_street_address = t.resAddressStreet
+                    visitorDetailsViewModel.insertVisitorInfo(visitor)
+                }
                 }else {
                     et_address.setError("House number does not Exist")
 
@@ -473,6 +517,35 @@ class VisitorDetailsFragment  : Fragment(){
 
 
 
+    }
+
+    fun sendSmsMsgFnc(mblNumVar: String?, smsMsgVar: String?) {
+        if (context?.let {
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.SEND_SMS
+                )
+            } == PackageManager.PERMISSION_GRANTED
+        ) {
+            try {
+                val smsMgrVar: SmsManager = SmsManager.getDefault()
+                smsMgrVar.sendTextMessage(mblNumVar, null, smsMsgVar, null, null)
+                Toast.makeText(
+                    context, "Message Sent",
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (ErrVar: Exception) {
+                Toast.makeText(
+                    context, ErrVar.message.toString(),
+                    Toast.LENGTH_LONG
+                ).show()
+                ErrVar.printStackTrace()
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(arrayOf(Manifest.permission.SEND_SMS), 10)
+            }
+        }
     }
 
 
