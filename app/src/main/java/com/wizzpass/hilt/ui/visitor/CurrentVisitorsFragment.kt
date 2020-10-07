@@ -50,6 +50,7 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("hala", " onCreate")
 
     }
 
@@ -69,6 +70,8 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
         searchText = arguments?.getString("searchField")
 
+        Log.d("hala", " onCreateView")
+
         return  visitorInfoListView
     }
 
@@ -76,6 +79,8 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.lifecycle.addObserver(mainViewModel)
+
+        Log.d("hala", " onViewCreated")
 
         mainViewModel.fetchVisitorData()
 
@@ -97,6 +102,10 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
     override fun onResume() {
         super.onResume()
+
+        Log.d("hala", "onResume")
+        observeViewModel()
+        Log.d("hala", "onResume"+ visitors.size)
         uploadResidentList(visitors)
     }
 
@@ -133,6 +142,8 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
     fun observeViewModel() {
 
+        Log.d("hala", "observeViewModel()")
+
 
         mainViewModel.visitorFinalList.observe(viewLifecycleOwner,
             Observer<MutableList<Visitor>> {
@@ -144,6 +155,7 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
                     println("Secondary Drivers Test WE GOT HERE Mobile")
                     if(t.size>0) {
 
+                        Log.d("hala", "observeViewModel()11")
                         recyclerView.visibility = View.VISIBLE
                         uploadResidentList(t as java.util.ArrayList<Visitor>)
                     }
