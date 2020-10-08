@@ -327,7 +327,7 @@ class VisitorDetailsFragment  : Fragment(){
                         var message = ""
 
                         if(reasonFroVisit.equals("Delivery/Collection")){
-                             message = "Hi " + resident!!.fName +"," + getEnteredVisitorDetails().vis_fName + "has arrived with your delivery/collection."
+                             message = "Hi " + resident!!.fName +"," + getEnteredVisitorDetails().vis_fName + " has arrived with your delivery/collection."
                         }else if(reasonFroVisit.equals("Visiting")){
                              message = "Hi " + resident!!.fName +", "+" Your visitor " + getEnteredVisitorDetails().vis_fName + " has arrived."
                         }else{
