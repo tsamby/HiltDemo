@@ -1,10 +1,15 @@
 package com.wizzpass.hilt.ui.login
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.telephony.SmsManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
@@ -20,6 +25,7 @@ import com.wizzpass.hilt.ui.register.ResAddressViewModel
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.util.replaceFragment
+import com.wizzpass.hilt.util.setBorderRed
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_guard_login.*
 import kotlinx.android.synthetic.main.fragment_register_resident.*
@@ -59,12 +65,21 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         super.onViewCreated(view, savedInstanceState)
         this.lifecycle.addObserver(guardLoginViewModel)
 
+        setBorderRed(emergency)
 
         fetchDataFromViewModel()
 
         buttonLogin.setOnClickListener {
             guardLoginViewModel.fetchGuardByPasword(getEnteredSearchDetails())
             fetchGuardFromViewModel()
+        }
+
+        buttonEmergency.setOnClickListener {
+            sendSmsMsgFnc("+27735603236","There is an emergency at the guard house!!!")
+            sendSmsMsgFnc("+27824697314","There is an emergency at the guard house!!!")
+
+            //sendSmsMsgFnc("+27747786956","There is an emergency at the guard house!!!")
+            //sendSmsMsgFnc("+27747786956","There is an emergency at the guard house!!!")
         }
     }
 
@@ -151,6 +166,35 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
 
             }
         )
+    }
+
+    fun sendSmsMsgFnc(mblNumVar: String?, smsMsgVar: String?) {
+        if (context?.let {
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.SEND_SMS
+                )
+            } == PackageManager.PERMISSION_GRANTED
+        ) {
+            try {
+                val smsMgrVar: SmsManager = SmsManager.getDefault()
+                smsMgrVar.sendTextMessage(mblNumVar, null, smsMsgVar, null, null)
+                Toast.makeText(
+                    context, "Message Sent",
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (ErrVar: Exception) {
+                Toast.makeText(
+                    context, ErrVar.message.toString(),
+                    Toast.LENGTH_LONG
+                ).show()
+                ErrVar.printStackTrace()
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(arrayOf(Manifest.permission.SEND_SMS), 10)
+            }
+        }
     }
 
 }

@@ -18,8 +18,11 @@ interface  VisitorDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend  fun insert(visitor: Visitor) : Long
 
-    @Query("select * From visitor ORDER BY visCarReg  ASC")
-    fun  fetch() : LiveData<MutableList<Visitor>>
+    //@Query("select * From visitor ORDER BY visCarReg  ASC")
+    //fun  fetch() : LiveData<MutableList<Visitor>>
+
+    @Query("select * From visitor WHERE visExitTimeStamp =:test ORDER BY visCarReg  ASC")
+    fun  fetch(test:String) : LiveData<MutableList<Visitor>>
 
     @Query("select * From visitor WHERE visCarReg = :carReg LIMIT 1")
     fun  fetchVisitorByCarReg(carReg : String) : LiveData<Visitor>
@@ -29,4 +32,7 @@ interface  VisitorDao{
 
     @Query("select * From visitor WHERE resAddress = :address")
     fun  fetchAllVisitorsLinkedToAddress(address : String) : LiveData<MutableList<Visitor>>
+
+    @Query("UPDATE visitor SET visExitTimeStamp=:exitTime WHERE visId = :id")
+    suspend fun updateExitTime(exitTime:String, id: Long)
 }

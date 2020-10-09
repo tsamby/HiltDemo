@@ -13,7 +13,10 @@ class VisitorDBRepository  @Inject constructor(private val visitorDao: VisitorDa
 
     suspend fun  insertVisitorData(visitor: Visitor) = visitorDao.insert(visitor)
 
-    suspend fun  fetchVisitors() = visitorDao.fetch()
+    suspend fun updateExitTimeStamp(exitTime : String, visId : Long) = visitorDao.updateExitTime(exitTime,visId)
+
+    //suspend fun  fetchVisitors() = visitorDao.fetch()
+    suspend fun  fetchVisitors(test : String) = visitorDao.fetch(test)
 
     suspend fun  fetchVisitorByCarReg (searchField : String) = visitorDao.fetchVisitorByCarReg(searchField)
 

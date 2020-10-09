@@ -179,11 +179,6 @@ class SearchFragment : Fragment() {
         activity?.replaceFragmentWithResidentAndSearchField(ResidentFoundFragment(), mContainerId, resident, searchString)
     }
 
-    /*fun launchVisitorDetailWithDataFragment(resident : Resident, searchString: String) {
-        activity?.replaceFragmentWithResidentAndSearchField(ResidentFoundFragment(), mContainerId, resident, searchString)
-    }
-
-     */
 
     fun launchVisitorDetailWithDataFragmentFound(resident : Resident, inputText : String ,searchString: String) {
         activity?.replaceFragmentWithResidentAndSearchFieldVisitor(VisitorDetailsFragment(), mContainerId, resident, inputText,searchString)

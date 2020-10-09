@@ -3,6 +3,7 @@ package com.wizzpass.hilt.util
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.Base64
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -41,3 +42,19 @@ fun setBorder(constraintLayout : ConstraintLayout) {
         constraintLayout.setBackground(border)
     }
 }
+@SuppressLint("ResourceAsColor")
+fun setBorderRed(constraintLayout : ConstraintLayout) {
+
+    var border1 = GradientDrawable()
+    border1.setColor(-0x1) //white background
+    border1.cornerRadius = 18f
+
+    border1.setStroke(4, Color.RED)
+    if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+        constraintLayout.setBackgroundDrawable(border1)
+    } else {
+        constraintLayout.setBackground(border1)
+    }
+}
+
+

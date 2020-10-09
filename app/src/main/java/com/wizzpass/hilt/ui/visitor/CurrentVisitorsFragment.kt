@@ -23,13 +23,11 @@ import com.wizzpass.hilt.adapter.VisitorAdapter
 import com.wizzpass.hilt.db.entity.Resident
 import com.wizzpass.hilt.db.entity.SecondaryDriver
 import com.wizzpass.hilt.db.entity.Visitor
+import com.wizzpass.hilt.ui.additionalVehicles.AdditionalVehiclesFragment
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.search.ResidentFoundFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
-import com.wizzpass.hilt.util.replaceFragment
-import com.wizzpass.hilt.util.replaceFragmentWithDataTest
-import com.wizzpass.hilt.util.replaceFragmentWithResidentAndSearchField
-import com.wizzpass.hilt.util.setBorder
+import com.wizzpass.hilt.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_resident_found.*
 import kotlinx.android.synthetic.main.fragment_resident_found_two.*
@@ -50,7 +48,7 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("hala", " onCreate")
+
 
     }
 
@@ -67,11 +65,7 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
         visitorInfoListView = inflater.inflate(R.layout.fragment_visitors_list, container, false)
         mContainerId = container?.id?:-1
 
-
         searchText = arguments?.getString("searchField")
-
-        Log.d("hala", " onCreateView")
-
         return  visitorInfoListView
     }
 
@@ -80,10 +74,8 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
         super.onViewCreated(view, savedInstanceState)
         this.lifecycle.addObserver(mainViewModel)
 
-        Log.d("hala", " onViewCreated")
 
         mainViewModel.fetchVisitorData()
-
 
         imageView5.setOnClickListener {
             launchSearchFragment()
@@ -102,10 +94,7 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
     override fun onResume() {
         super.onResume()
-
-        Log.d("hala", "onResume")
         observeViewModel()
-        Log.d("hala", "onResume"+ visitors.size)
         uploadResidentList(visitors)
     }
 
@@ -127,22 +116,17 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
     override fun onItemClick(position: Int) {
 
-        //val clickedResident : Visitor = visitors[position]
-        //launchResultWithDataFragment(clickedResident)
+        val clickedResident : Visitor = visitors[position]
+        launchViewVisitorDetailFragment(clickedResident)
 
     }
 
-    fun launchResultWithDataFragment(resident : Resident) {
-        activity?.replaceFragmentWithDataTest(ResidentFoundFragment(), mContainerId, resident)
-    }
 
-    fun launchResultWithDataFragment(resident : Resident, searchString: String) {
-        activity?.replaceFragmentWithResidentAndSearchField(ResidentFoundFragment(), mContainerId, resident,searchString)
+    fun launchViewVisitorDetailFragment(visitor: Visitor) {
+        activity?.replaceFragmentWithDataTestVisitor(VisitorViewDetails(),mContainerId, visitor)
     }
 
     fun observeViewModel() {
-
-        Log.d("hala", "observeViewModel()")
 
 
         mainViewModel.visitorFinalList.observe(viewLifecycleOwner,
@@ -152,12 +136,10 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
                 }else {
 
-                    println("Secondary Drivers Test WE GOT HERE Mobile")
                     if(t.size>0) {
-
-                        Log.d("hala", "observeViewModel()11")
                         recyclerView.visibility = View.VISIBLE
-                        uploadResidentList(t as java.util.ArrayList<Visitor>)
+                        visitors = t as java.util.ArrayList<Visitor>
+                        uploadResidentList(visitors)
                     }
                 }
 

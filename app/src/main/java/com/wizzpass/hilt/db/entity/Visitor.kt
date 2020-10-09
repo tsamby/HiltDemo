@@ -1,5 +1,7 @@
 package com.wizzpass.hilt.db.entity
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.annotation.Nullable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -26,5 +28,52 @@ data class Visitor(
     val visEntryTimeStamp: String,
     val visExitTimeStamp: String,
     val residentId: String
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readLong(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.createStringArrayList() as ArrayList<String>,
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(visId)
+        parcel.writeString(visCarReg)
+        parcel.writeString(visMobile)
+        parcel.writeString(resAddress)
+        parcel.writeString(res_street_address)
+        parcel.writeString(vis_fName)
+        parcel.writeString(vis_lname)
+        parcel.writeString(vis_profImage)
+        parcel.writeStringList(vis_carImage)
+        parcel.writeString(reasonForVist)
+        parcel.writeString(visEntryTimeStamp)
+        parcel.writeString(visExitTimeStamp)
+        parcel.writeString(residentId)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Visitor> {
+        override fun createFromParcel(parcel: Parcel): Visitor {
+            return Visitor(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Visitor?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 

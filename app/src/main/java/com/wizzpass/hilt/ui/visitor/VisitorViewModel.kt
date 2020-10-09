@@ -29,7 +29,7 @@ public class VisitorViewModel@ViewModelInject constructor(private val visitorDBR
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun fetchVisitorData(){
         viewModelScope.launch {
-            visitorFinalList = visitorDBRepository.fetchVisitors()
+            visitorFinalList = visitorDBRepository.fetchVisitors("")
         }
     }
 
@@ -87,6 +87,12 @@ public class VisitorViewModel@ViewModelInject constructor(private val visitorDBR
         }
 
 
+    }
+
+    fun upDateExitTime(exitTime : String, visId : Long){
+        viewModelScope.launch {
+           visitorDBRepository.updateExitTimeStamp(exitTime,visId)
+        }
     }
 
     fun fetchError(): LiveData<String> = error

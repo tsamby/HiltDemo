@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.db.entity.Visitor
 
 /**
  * Created by novuyo on 20,September,2020
@@ -51,6 +52,20 @@ fun FragmentActivity.replaceFragmentWithDataTest(fragment: Fragment, frameId: In
     supportFragmentManager.inTransactionWithoutHistoryData {
         val bundle = Bundle()
         bundle.putParcelable("resident", resident)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        transaction.replace(frameId, fragment)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //transaction.commit()
+    }
+}
+
+fun FragmentActivity.replaceFragmentWithDataTestVisitor(fragment: Fragment, frameId: Int, visitor : Visitor) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putParcelable("visitor", visitor)
         val transaction = supportFragmentManager.beginTransaction()
         fragment.arguments = bundle
         transaction.replace(frameId, fragment)

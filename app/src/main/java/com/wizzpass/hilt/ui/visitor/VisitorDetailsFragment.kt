@@ -38,9 +38,7 @@ import com.wizzpass.hilt.db.entity.SecondaryDriver
 import com.wizzpass.hilt.ui.additionalVehicles.AdditionalVehiclesFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.ui.secondaryDrivers.SecondaryDriverFragment
-import com.wizzpass.hilt.util.replaceFragment
-import com.wizzpass.hilt.util.replaceFragmentWithNoHistory
-import com.wizzpass.hilt.util.replaceFragmentWithStringData
+import com.wizzpass.hilt.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_capture_visitor_details.*
 import kotlinx.android.synthetic.main.fragment_register_resident.bt_register
@@ -94,6 +92,10 @@ class VisitorDetailsFragment  : Fragment(){
     var searchText: String? = ""
     var reasonFroVisit: String? = ""
 
+    var car_inputText: String? = ""
+    var mobile_inputText: String? = ""
+
+
     private var driversAdapter : SecondaryDriverAdapter? = null
     var drivers= arrayListOf<SecondaryDriver>()
     var resident: Resident? = null
@@ -136,7 +138,13 @@ class VisitorDetailsFragment  : Fragment(){
         }
 
         bt_register.setOnClickListener {
-            checkIfAddressExists()
+            //checkIfAddressExists()
+            if(!reasonFroVisit.equals("Please choose reason for visit")) {
+                val visitor = getEnteredVisitorDetails()
+                visitorDetailsViewModel.insertVisitorInfo(visitor)
+            }else{
+                Toast.makeText(context, "Please choose reason for visit", Toast.LENGTH_SHORT).show()
+            }
         }
 
         img_profile.setOnClickListener {
@@ -197,10 +205,13 @@ class VisitorDetailsFragment  : Fragment(){
 
         if(searchField.equals("car_reg")){
             et_carReg.setText(inputText)
+            car_inputText = inputText
+
         }
 
         if(searchField.equals("mobile")){
             et_mobile.setText(inputText)
+            mobile_inputText = inputText
         }
 
         if(searchField.equals("address")){
@@ -264,14 +275,16 @@ class VisitorDetailsFragment  : Fragment(){
 
     fun getEnteredVisitorDetails() : Visitor {
 
+
+
         val bmprofile = imgProfilePhotoPath
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Visitor(
                     0L,
-                    et_carReg.text.toString(),
-                    et_mobile.text.toString(),
-                    et_address.text.toString(),
-                    et_address_street.text.toString(),
+                    car_inputText!!,
+                    mobile_inputText!!,
+                    resident!!.address,
+                    resident!!.street_address,
                     et_name.text.toString(),
                     et_surname.text.toString(), bmprofile!!, myList!!, reasonFroVisit!!,
                     LocalDateTime.now().toString(), "", resident!!.resId.toString()
@@ -327,18 +340,13 @@ class VisitorDetailsFragment  : Fragment(){
                         var message = ""
 
                         if(reasonFroVisit.equals("Delivery/Collection")){
-                             message = "Hi " + resident!!.fName +"," + getEnteredVisitorDetails().vis_fName + " has arrived with your delivery/collection."
+
+                            message = "Hi "+resident!!.fName+","+getEnteredVisitorDetails().vis_fName+" has arrived with your delivery/collection."
                         }else if(reasonFroVisit.equals("Visiting")){
                              message = "Hi " + resident!!.fName +", "+" Your visitor " + getEnteredVisitorDetails().vis_fName + " has arrived."
                         }else{
                             message = "Hi " + resident!!.fName +", " + getEnteredVisitorDetails().vis_fName + " is here to see you."
                         }
-
-                        Log.d("errorMobile", mobile)
-                        Log.d("errorMessage", message)
-
-
-
 
                         sendSmsMsgFnc(mobile,message )
 
@@ -400,6 +408,8 @@ class VisitorDetailsFragment  : Fragment(){
     fun launchRegisterAdditionalCarFragment(carReg : String, mobile : String, address: String,resident: Resident) {
         activity?.replaceFragmentWithStringData(AdditionalVehiclesFragment(), mContainerId, carReg, mobile,address,resident)
     }
+
+
 
 
 
