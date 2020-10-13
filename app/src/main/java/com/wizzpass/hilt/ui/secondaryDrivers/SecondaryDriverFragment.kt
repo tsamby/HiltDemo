@@ -5,6 +5,7 @@ package com.wizzpass.hilt.ui.secondaryDrivers
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -42,6 +43,8 @@ import com.wizzpass.hilt.db.entity.Vehicles
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.util.replaceFragmentWithDataTest
 import kotlinx.android.synthetic.main.fragment_additional_cars.*
+import kotlinx.android.synthetic.main.fragment_additional_cars.img_car
+import kotlinx.android.synthetic.main.fragment_register_resident.*
 import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_add
 import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_done
 import kotlinx.android.synthetic.main.fragment_secondary_drivers.bt_save
@@ -139,11 +142,33 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
 
         }
 
+        button4.setOnClickListener {
+            profImage = true
+            pickImageFromGallery();
+        }
+
+
 
         observeViewModel()
 
         initAdapter()
     }
+
+    private fun pickImageFromGallery() {
+        //Intent to pick image
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+
+    companion object {
+        //image pick code
+        private val IMAGE_PICK_CODE = 1000;
+        //Permission code
+        private val PERMISSION_CODE = 1001;
+    }
+
+
 
     fun uploadDriversList(secondaryDrivers : ArrayList<SecondaryDriver>){
         driversAdapter?.refreshAdapter(secondaryDrivers)
@@ -260,10 +285,8 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imgFile = File(currentPhotoPath)
             if (imgFile.exists()) {
-                if(profImage) {
-
-                    img_profile.setBackgroundResource(0);
-                    //img_profile.setImageResource(android.R.color.transparent)
+                if (profImage) {
+                    img_profile.setBackgroundResource(0)
                     img_profile.setImageURI(Uri.fromFile(imgFile))
                     imgProfilePhotoPath = currentPhotoPath
 
@@ -271,7 +294,41 @@ class SecondaryDriverFragment  : Fragment(),SecondaryDriverAdapter.OnItemClickLi
 
             }
         }
+
+        if (requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
+
+            val imgFile = File(getRealPathFromURI(data?.data!!))
+            if (imgFile.exists()) {
+                if (profImage) {
+                    img_profile.setBackgroundResource(0)
+                    img_profile.setImageURI(data?.data)
+                    imgProfilePhotoPath = getRealPathFromURI(data?.data!!)
+
+
+                }
+
+            }
+        }
     }
+
+    private fun getRealPathFromURI(contentURI: Uri): String? {
+        val result: String?
+        val cursor: Cursor? =
+            activity?.getContentResolver()?.query(contentURI, null, null, null, null)
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.path
+        } else {
+            cursor.moveToFirst()
+            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+
+        Log.d("Result", result!!)
+        return result
+    }
+
+
 
 
     fun getEnteredSecondaryDriverDetails() : SecondaryDriver {

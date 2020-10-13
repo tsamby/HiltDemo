@@ -3,6 +3,7 @@ package com.wizzpass.hilt.ui.register
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -32,7 +33,6 @@ import com.wizzpass.hilt.util.replaceFragment
 import com.wizzpass.hilt.util.replaceFragmentWithNoHistory
 import com.wizzpass.hilt.util.replaceFragmentWithStringData
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_register_resident.*
 import kotlinx.android.synthetic.main.fragment_register_resident.bt_register
 import kotlinx.android.synthetic.main.fragment_register_resident.et_address
 import kotlinx.android.synthetic.main.fragment_register_resident.et_address_street
@@ -45,7 +45,6 @@ import kotlinx.android.synthetic.main.fragment_register_resident.img_car
 import kotlinx.android.synthetic.main.fragment_register_resident.img_profile
 import kotlinx.android.synthetic.main.fragment_register_resident.textView5
 import kotlinx.android.synthetic.main.fragment_register_resident_two.*
-import kotlinx.android.synthetic.main.fragment_secondary_drivers.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -101,10 +100,6 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
 
         inputText = arguments?.getString("inputText")
         searchText = arguments?.getString("searchField")
-
-        //secondaryDriverViewModel.fetchResidentByCarReg("XHXI")
-
-
         resident = arguments?.getParcelable("resident")
 
 
@@ -154,6 +149,20 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
             dispatchTakePictureIntent()
         }
 
+        button2.setOnClickListener {
+            profImage = true
+            carImage = false
+                pickImageFromGallery();
+            }
+
+        button3.setOnClickListener {
+            carImage = true
+            profImage = false
+            pickImageFromGallery();
+        }
+
+
+
         if(resident!=null) {
             Log.d("RESIDENT", resident.toString())
             println("RESIDENT ${resident.toString()}")
@@ -172,6 +181,20 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
         driversAdapter?.refreshAdapter(secondaryDrivers)
     }
 
+
+    private fun pickImageFromGallery() {
+        //Intent to pick image
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+
+    companion object {
+        //image pick code
+        private val IMAGE_PICK_CODE = 1000;
+        //Permission code
+        private val PERMISSION_CODE = 1001;
+    }
 
 
     private fun initAdapter(){
@@ -514,6 +537,46 @@ private fun findSecondaryDriver(){
 
             }
         }
+
+         if ( requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK ){
+
+             val imgFile = File(getRealPathFromURI(data?.data!!))
+             if (imgFile.exists()) {
+                 if(profImage) {
+                     img_profile.setColorFilter(null)
+                     img_profile.setImageURI(data?.data)
+                     imgProfilePhotoPath = getRealPathFromURI(data?.data!!)
+
+                 }else if(carImage){
+                     img_car.setColorFilter(null)
+                     img_car.setImageURI(data?.data)
+                     carProfilePhotoPath = getRealPathFromURI(data?.data!!)
+                     myList.add(carProfilePhotoPath!!)
+
+
+                 }
+
+
+             }
+
+         }
+    }
+
+    private fun getRealPathFromURI(contentURI: Uri): String? {
+        val result: String?
+        val cursor: Cursor? =
+            activity?.getContentResolver()?.query(contentURI, null, null, null, null)
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.path
+        } else {
+            cursor.moveToFirst()
+            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+
+        Log.d("Result", result!!)
+        return result
     }
 
     override fun onDestroy() {

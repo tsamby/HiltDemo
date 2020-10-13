@@ -221,10 +221,18 @@ class ResidentFoundFragment : Fragment() , SecondaryDriverAdapter.OnItemClickLis
 
                 }else {
 
-                    println("Secondary Drivers Test WE GOT HERE")
+                    if(t.size>0) {
+                        textView14.visibility = View.VISIBLE
+                        recylerViewResFound.visibility = View.VISIBLE
+                        uploadDriversList(t as ArrayList<SecondaryDriver>)
+                    }
+
+                    /*println("Secondary Drivers Test WE GOT HERE")
                     textView14.visibility = View.VISIBLE
                     recylerViewResFound.visibility = View.VISIBLE
                     uploadDriversList(t as ArrayList<SecondaryDriver>)
+
+                     */
 
                 }
 
