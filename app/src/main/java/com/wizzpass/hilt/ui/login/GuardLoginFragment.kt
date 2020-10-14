@@ -75,6 +75,7 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         }
 
         buttonEmergency.setOnClickListener {
+
             sendSmsMsgFnc("+27735603236","There is an emergency at the guard house!!!")
             sendSmsMsgFnc("+27824697314","There is an emergency at the guard house!!!")
 
