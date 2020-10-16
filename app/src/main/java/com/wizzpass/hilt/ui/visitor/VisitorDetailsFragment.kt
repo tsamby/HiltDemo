@@ -348,7 +348,11 @@ class VisitorDetailsFragment  : Fragment(){
                             message = "Hi " + resident!!.fName +", " + getEnteredVisitorDetails().vis_fName + " is here to see you."
                         }
 
-                        sendSmsMsgFnc(mobile,message )
+                        try {
+                            sendSmsMsgFnc(mobile, message)
+                        }catch (ex : java.lang.Exception){
+                            ex.printStackTrace()
+                        }
 
                         launchSearchFragment()
                     }

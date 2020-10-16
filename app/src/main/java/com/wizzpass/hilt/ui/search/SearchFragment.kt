@@ -1,7 +1,10 @@
 package com.wizzpass.hilt.ui.search
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -11,7 +14,6 @@ import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.db.entity.ResAddress
 import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.Visitor
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.register.ResAddressViewModel
 import com.wizzpass.hilt.ui.visitor.CurrentVistorsFragment
@@ -43,8 +45,15 @@ class SearchFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu1, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +62,8 @@ class SearchFragment : Fragment() {
     ): View? {
         searchView = inflater.inflate(R.layout.fragment_search, container, false)
         mContainerId = container?.id?:-1
+
+
 
         if(arguments!=null) {
             isVisitor = arguments?.getBoolean("isVisitor", false)!!
@@ -79,6 +90,8 @@ class SearchFragment : Fragment() {
         val intent = activity?.getIntent()
         activity?.finish()
         startActivity(intent)
+
+
 
         }
 

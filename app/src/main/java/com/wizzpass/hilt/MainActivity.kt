@@ -7,12 +7,15 @@ import android.os.Build
 import android.os.Bundle
 import android.telephony.SmsManager
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.wizzpass.hilt.ui.login.GuardLoginFragment
 import com.wizzpass.hilt.util.replaceFragmentWithNoHistory
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //setSupportActionBar(findViewById(R.id.toolbar))
         checkAndroidVersion()
 
 
@@ -86,8 +90,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-        Log.d("currentFocus", event.toString())
         if (currentFocus != null) {
             imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
@@ -107,6 +109,22 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
 
 
