@@ -90,6 +90,20 @@ fun FragmentActivity.replaceFragmentWithResidentAndSearchField(fragment: Fragmen
     }
 }
 
+fun FragmentActivity.replaceFragmentAsAdmin(fragment: Fragment, frameId: Int) {
+    supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
+    supportFragmentManager.inTransactionWithoutHistoryData {
+        val bundle = Bundle()
+        bundle.putBoolean("admin", true)
+        val transaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
+        transaction.replace(frameId, fragment)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //transaction.commit()
+    }
+}
+
 fun FragmentActivity.replaceFragmentWithResidentAndSearchFieldVisitor(fragment: Fragment, frameId: Int, resident : Resident,inputText :String, searchString: String) {
     supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
     supportFragmentManager.inTransactionWithoutHistoryData {

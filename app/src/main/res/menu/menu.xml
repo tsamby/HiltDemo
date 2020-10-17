@@ -2,14 +2,10 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_signout"
+        android:id="@+id/action_admin"
         android:orderInCategory="100"
         android:title="Admin"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="DownLoadCsv"
-        app:showAsAction="never" />
+
 </menu>
