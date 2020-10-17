@@ -4,16 +4,18 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.wizzpass.hilt.data.local.db.entity.Resident
 import com.wizzpass.hilt.data.local.db.repository.ResidentDBRepository
+import com.wizzpass.hilt.data.local.prefs.SharedPrefs
 import kotlinx.coroutines.launch
 
 /**
  * Created by novuyo on 20,September,2020
  */
-public class RegisterViewModel@ViewModelInject constructor(private val residentDBRepository: ResidentDBRepository) :
+public class RegisterViewModel@ViewModelInject constructor(private val residentDBRepository: ResidentDBRepository, private val sharedPrefs: SharedPrefs) :
     ViewModel(), LifecycleObserver {
 
 
     private  val insertedId =  MutableLiveData<Long>()
+    private val deletedId = MutableLiveData<Int>()
     private val  error = MutableLiveData<String>()
     private val  residentDetailsMissing  = MutableLiveData<String>()
     var residentFinalList:LiveData<MutableList<Resident>> = MutableLiveData<MutableList<Resident>>()
@@ -26,6 +28,15 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
             residentFinalList = residentDBRepository.fetchResidents()
         }
     }
+
+    fun deleteResidentData(resident : Resident){
+        viewModelScope.launch {
+           residentDBRepository.deleteResidentData(resident)
+
+        }
+    }
+
+
 
 
     fun insertResidentInfo(resident: Resident) {
@@ -41,6 +52,12 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
                 val resId: Long = residentDBRepository.insertResidentData(resident)
                 insertedId.postValue(resId)
             }
+        }
+    }
+
+    fun updateResidentData(resident : Resident){
+        viewModelScope.launch {
+            residentDBRepository.updateResidentData(resident)
         }
     }
 
@@ -80,10 +97,16 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
 
     }
 
+    fun getAdminPrefs() : Boolean{
+        return sharedPrefs.getBooleanValue("isAdmin")
+    }
+
     fun fetchError(): LiveData<String> = error
 
     fun checkIfDetailsMissing(): LiveData<String> = residentDetailsMissing
 
     fun fetchInsertedId(): LiveData<Long> = insertedId
+
+
 
 }

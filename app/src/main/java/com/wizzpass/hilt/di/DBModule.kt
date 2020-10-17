@@ -1,15 +1,18 @@
 package com.wizzpass.hilt.di
 
+import android.app.Application
 import android.content.Context
 import com.wizzpass.hilt.data.local.db.ResidentDB
 import com.wizzpass.hilt.data.local.db.dao.*
 import com.wizzpass.hilt.data.local.db.repository.*
-
+import com.wizzpass.hilt.data.local.prefs.SharedPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Singleton
+
 
 /**
  * Created by novuyo on 20,September,2020
@@ -17,6 +20,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 @InstallIn(ApplicationComponent::class)
 @Module
 object DBModule {
+
+
+    @Provides
+    @Singleton
+    fun sharedPrefs(application: Application?): SharedPrefs? {
+        return SharedPrefs.getInstance(application)
+    }
 
     @Provides
     fun provideResidentDao(@ApplicationContext appContext: Context) : ResidentDao {

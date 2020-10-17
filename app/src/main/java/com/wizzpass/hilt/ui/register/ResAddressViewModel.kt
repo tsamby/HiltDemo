@@ -27,6 +27,8 @@ public class ResAddressViewModel@ViewModelInject constructor(private val resAddr
         }
     }
 
+
+
     fun insertAddressInfo(resAddress: ResAddress) {
         viewModelScope.launch {
             if(resAddress.resAddressNo.isNullOrEmpty()||

@@ -7,17 +7,17 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.wizzpass.hilt.data.local.db.entity.Guard
 import com.wizzpass.hilt.data.local.db.repository.GuardDBRepository
+import com.wizzpass.hilt.data.local.prefs.SharedPrefs
 import kotlinx.coroutines.launch
 
 /**
  * Created by novuyo on 20,September,2020
  */
-public class GuardLoginViewModel @ViewModelInject constructor(private val guardDBRepository: GuardDBRepository) :
+public class GuardLoginViewModel @ViewModelInject constructor(private val guardDBRepository: GuardDBRepository, val sharedPres : SharedPrefs) :
     ViewModel(), LifecycleObserver {
 
     private  val insertedId =  MutableLiveData<Long>()
     private val  error = MutableLiveData<String>()
-    private val  numberOfGuards  = MutableLiveData<Int>()
     var guardFinalList: LiveData<MutableList<Guard>> = MutableLiveData<MutableList<Guard>>()
     var guardFound : LiveData<Guard> = MutableLiveData<Guard>()
 

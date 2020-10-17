@@ -82,6 +82,7 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
     val REQUEST_TAKE_PHOTO = 1
     var inputText: String? = ""
     var searchText: String? = ""
+    var isUpdate : Boolean = false
 
     private var driversAdapter : SecondaryDriverAdapter? = null
     var drivers= arrayListOf<SecondaryDriver>()
@@ -165,11 +166,27 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
 
 
         if(resident!=null) {
-            Log.d("RESIDENT", resident.toString())
-            println("RESIDENT ${resident.toString()}")
             uploadResidentData(resident!!)
             secondaryDriverViewModel.fetchSecondaryDriversByCarReg(resident!!.carReg)
+            if(registerViewModel.getAdminPrefs()){
+                println("isTestrEG ${registerViewModel.getAdminPrefs()}")
+                bt_register.visibility = View.GONE
+                bt_update.visibility = View.VISIBLE
+                bt_delete.visibility = View.VISIBLE
+            }
 
+        }
+
+        bt_delete.setOnClickListener {
+            if(resident!=null) {
+               registerViewModel.deleteResidentData(resident!!)
+                launchSearchFragment()
+            }
+        }
+
+        bt_update.setOnClickListener {
+            isUpdate= true
+            checkIfAddressExists()
         }
 
 
@@ -299,6 +316,22 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
 
     }
 
+      fun updateResidentDetails(resId : Long) : Resident {
+
+        val bmprofile = imgProfilePhotoPath
+
+        return Resident(
+           resId,
+            et_carReg.text.toString(),
+            et_mobile.text.toString(),
+            et_address.text.toString(),
+            et_address_street.text.toString(),
+            et_name.text.toString(),
+            et_surname.text.toString(), bmprofile!!,myList!!,addtionalCars,secDrrivers
+        )
+
+    }
+
 
 
 
@@ -334,7 +367,12 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
         registerViewModel.fetchInsertedId().observe(viewLifecycleOwner,
             Observer<Long> { t ->
                 if(t != -1L){
-                    Toast.makeText(activity,"Resident successfully registered", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            activity,
+                            "Resident successfully registered",
+                            Toast.LENGTH_LONG
+                        ).show()
+
                     activity?.let{
                         launchSearchFragment()
                     }
@@ -344,6 +382,7 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
                 }
 
             })
+
 
         registerViewModel.checkIfDetailsMissing().observe(viewLifecycleOwner,
             Observer<String> {
@@ -448,9 +487,18 @@ private fun findSecondaryDriver(){
                    }else if(additionalCars){
                        launchRegisterAdditionalCarFragment(et_carReg.text.toString(),et_mobile.text.toString(), et_address.text.toString(),getEnteredResidentDetails())
                    }else {
-                       val resident = getEnteredResidentDetails()
-                       resident.street_address = t.resAddressStreet
-                       registerViewModel.insertResidentInfo(resident)
+
+                       if(isUpdate){
+                           val resident = updateResidentDetails(resident!!.resId)
+                           resident.street_address = t.resAddressStreet
+                           registerViewModel.updateResidentData(resident)
+                           Toast.makeText(activity,"Resident information updated", Toast.LENGTH_LONG).show()
+                           launchSearchFragment()
+                       }else {
+                           val resident = getEnteredResidentDetails()
+                           resident.street_address = t.resAddressStreet
+                           registerViewModel.insertResidentInfo(resident)
+                       }
                    }
 
                 }else {

@@ -59,6 +59,7 @@ class SearchFragment : Fragment() {
         searchView = inflater.inflate(R.layout.fragment_search, container, false)
         mContainerId = container?.id?:-1
 
+        println("isTest ${registerViewModel.getAdminPrefs()}")
 
 
         if(arguments!=null) {
@@ -142,6 +143,10 @@ class SearchFragment : Fragment() {
         buttonViewCurrentParkers.setOnClickListener {
             launchCuurentVisitorsFragment()
         }
+
+        if(registerViewModel.getAdminPrefs()){
+            textView32.visibility = View.VISIBLE
+        }
     }
 
 
@@ -213,7 +218,7 @@ class SearchFragment : Fragment() {
                     t -> println("Received UserInfo2 List ${t}")
                 if(t==null){
 
-                    if(admin){
+                    if(registerViewModel.getAdminPrefs()){
                         launchRegisterResidentFragment(inputString, searchFieldUsed)
                     }else {
                         if (isVisitor) {
@@ -224,7 +229,7 @@ class SearchFragment : Fragment() {
                     }
                 }else{
 
-                    if(admin) {
+                    if(registerViewModel.getAdminPrefs()) {
 
                         launchRegisterResidentResidentData(t, searchFieldUsed)
                     }else{
@@ -245,7 +250,7 @@ class SearchFragment : Fragment() {
                 println("House number Residents Test ${t}")
                 if (t == null) {
 
-                    if(admin){
+                    if(registerViewModel.getAdminPrefs()){
                         launchRegisterResidentFragment(inputString, searchFieldUsed)
                     }else {
                         if (isVisitor) {
@@ -257,7 +262,7 @@ class SearchFragment : Fragment() {
 
                 } else if (t.size == 1) {
 
-                    if(admin){
+                    if(registerViewModel.getAdminPrefs()){
                         launchRegisterResidentResidentData(t[0], searchFieldUsed)
                     }else {
                         if (isVisitor) {
@@ -272,7 +277,7 @@ class SearchFragment : Fragment() {
                     }
                 } else if (t.size > 1) {
 
-                    if(admin) {
+                    if(registerViewModel.getAdminPrefs()) {
 
                     }else{
                         var list = arrayListOf<Resident>()
@@ -288,7 +293,7 @@ class SearchFragment : Fragment() {
                     }
                 } else {
 
-                    if(admin){
+                    if(registerViewModel.getAdminPrefs()){
                         launchRegisterResidentResidentData(t[0], searchFieldUsed)
                     }else {
                         if (isVisitor) {

@@ -92,17 +92,6 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         return et_password.text.toString()
     }
 
-    fun getResAddressDetails() : ResAddress {
-        return ResAddress(
-            0L,
-            "362",
-            "Ferndale"
-        )
-    }
-
-
-
-
 
     fun getGuardDetailsDetails() : Guard {
         return Guard(
@@ -121,17 +110,12 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
     }
 
 
-    fun launchRegisterResidentFragment(){
-        activity?.replaceFragment(ResidentRegisterFragment(), mContainerId)
-    }
-
     fun launchSearchResidentFragment(){
         activity?.replaceFragment(SearchFragment(), mContainerId)
     }
 
 
     private fun fetchDataFromViewModel(){
-        // viewModel.fetchRoomData()
         guardLoginViewModel.guardFinalList.observe(viewLifecycleOwner,
             Observer<MutableList<Guard>> {
                     t -> println("Received UserInfo List ${t.size}")
@@ -160,18 +144,7 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         )
     }
 
-    private fun fetchAddressesViewModel(){
 
-        resAddressViewModel.residentFinalList.observe(viewLifecycleOwner,
-            Observer<MutableList<ResAddress>> {
-                    t -> println("Address List ${t.size}")
-                if(t.size==0){
-                    resAddressViewModel.insertResAddressInfo()
-                }
-
-            }
-        )
-    }
 
     fun sendSmsMsgFnc(mblNumVar: String?, smsMsgVar: String?) {
         if (context?.let {
@@ -202,14 +175,5 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-    }
 
 }

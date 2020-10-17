@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        supervisorViewModel.clearSharedPrefs()
         checkAndroidVersion()
 
 
@@ -145,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         dialogBuilder = android.app.AlertDialog.Builder(this@MainActivity).create()
         val inflater = this.layoutInflater
         val dialogView: View = inflater.inflate(R.layout.custom_supervisor_dialog, null)
-        val textView = dialogView.findViewById<View>(R.id.textView9) as TextView
+        val textView = dialogView.findViewById<View>(R.id.textView10) as TextView
         val button1 = dialogView.findViewById<View>(R.id.button) as Button
         edt_pin = dialogView.findViewById<View>(R.id.et_password) as EditText
 
@@ -175,6 +176,9 @@ class MainActivity : AppCompatActivity() {
                 if(t==null){
                     edt_pin!!.setError("Pin incorrect")
                 }else{
+
+
+                    supervisorViewModel.setAdminPrefs()
                     dialogBuilder!!.dismiss()
                     replaceFragmentWithNoHistory(AdminUserFragment(), R.id.container_fragment)
 

@@ -1,10 +1,7 @@
 package com.wizzpass.hilt.data.local.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.wizzpass.hilt.data.local.db.entity.Resident
 
 
@@ -28,4 +25,14 @@ interface  ResidentDao{
 
     @Query("select * From resident WHERE address = :address")
     fun  fetchAllResidentsLinkedToAddress(address : String) : LiveData<MutableList<Resident>>
+
+    @Query(" DELETE FROM resident WHERE resId = :resId")
+    suspend fun delete(resId : Long)
+
+    @Delete
+    suspend fun delete(resident: Resident) : Int
+
+    @Update
+    suspend fun update(resident: Resident)
+
 }

@@ -18,4 +18,8 @@ class ResidentDBRepository  @Inject constructor(private val residentDao: Residen
     suspend fun  fetchResidentByMobile (searchField : String) = residentDao.fetchResidentByMobile(searchField)
 
     suspend fun  fetchResidentByAddress (searchField : String) = residentDao.fetchAllResidentsLinkedToAddress(searchField)
+
+    suspend fun deleteResidentData(resident: Resident) = residentDao.delete(resident)
+
+    suspend fun updateResidentData(resident: Resident) = residentDao.update(resident)
 }

@@ -4,12 +4,13 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.wizzpass.hilt.data.local.db.entity.Supervisor
 import com.wizzpass.hilt.data.local.db.repository.SupervisorDBRepository
+import com.wizzpass.hilt.data.local.prefs.SharedPrefs
 import kotlinx.coroutines.launch
 
 /**
  * Created by novuyo on 26,September,2020
  */
-public class SupervisorViewModel @ViewModelInject constructor(private val supervisorDBRepository: SupervisorDBRepository) :
+public class SupervisorViewModel @ViewModelInject constructor(private val supervisorDBRepository: SupervisorDBRepository, private val sharedPrefs: SharedPrefs) :
     ViewModel(), LifecycleObserver {
 
     private  val insertedId =  MutableLiveData<Long>()
@@ -46,6 +47,15 @@ public class SupervisorViewModel @ViewModelInject constructor(private val superv
                 insertedId.postValue(guardId)
             }
         }
+    }
+
+
+    fun setAdminPrefs(){
+        sharedPrefs.setBooleanValue("isAdmin", true)
+    }
+
+    fun clearSharedPrefs(){
+        sharedPrefs.clearAllPreferences()
     }
 
 
