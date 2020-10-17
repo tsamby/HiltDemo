@@ -84,9 +84,10 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
 
     override fun onResume() {
         super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         observeViewModel()
         uploadResidentList(visitors)
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+
     }
 
 
