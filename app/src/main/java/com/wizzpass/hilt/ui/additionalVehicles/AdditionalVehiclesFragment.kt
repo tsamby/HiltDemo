@@ -22,7 +22,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.Vehicles
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.util.replaceFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +43,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wizzpass.hilt.adapter.AdditionalVehicleAdapter
 import com.wizzpass.hilt.adapter.ResidentAdapter
-import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.data.local.db.entity.Vehicles
 import kotlinx.android.synthetic.main.fragment_additional_cars.*
 import kotlinx.android.synthetic.main.fragment_resident_list.*
 

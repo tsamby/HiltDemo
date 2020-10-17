@@ -1,4 +1,4 @@
-package com.wizzpass.hilt.db.entity
+package com.wizzpass.hilt.data.local.db.entity
 
 import android.os.Parcel
 import android.os.Parcelable

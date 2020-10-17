@@ -13,9 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.Visitor
-import kotlinx.android.synthetic.main.resident_list_item.view.*
+import com.wizzpass.hilt.data.local.db.entity.Visitor
 import kotlinx.android.synthetic.main.resident_list_item.view.resident_name
 import kotlinx.android.synthetic.main.visitor_list_item.view.*
 import java.io.File

@@ -2,10 +2,8 @@ package com.wizzpass.hilt.ui.register
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.wizzpass.hilt.db.entity.ResAddress
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.repository.ResAddressDBRepository
-import com.wizzpass.hilt.db.repository.ResidentDBRepository
+import com.wizzpass.hilt.data.local.db.entity.ResAddress
+import com.wizzpass.hilt.data.local.db.repository.ResAddressDBRepository
 import kotlinx.coroutines.launch
 import java.util.ArrayList
 

@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.SecondaryDriver
-import kotlinx.android.synthetic.main.fragment_register_resident.*
+import com.wizzpass.hilt.data.local.db.entity.SecondaryDriver
 import kotlinx.android.synthetic.main.secondary_driver_list_item.view.*
 import java.io.File
 

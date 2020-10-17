@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.ResAddress
-import com.wizzpass.hilt.db.entity.Resident
+import com.wizzpass.hilt.data.local.db.entity.ResAddress
+import com.wizzpass.hilt.data.local.db.entity.Resident
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.register.ResAddressViewModel
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment

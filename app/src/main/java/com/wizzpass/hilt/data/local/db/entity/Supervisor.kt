@@ -1,4 +1,4 @@
-package com.wizzpass.hilt.db.entity
+package com.wizzpass.hilt.data.local.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 /**
  * Created by novuyo on 20,September,2020
  */
-@Entity(tableName = "guard")
-data class Guard (
+@Entity(tableName = "supervisor")
+data class Supervisor (
     @PrimaryKey(autoGenerate = true)
-    val guardId : Long = 0L,
+    val supId : Long = 0L,
     val userName : String,
     val password : String
 

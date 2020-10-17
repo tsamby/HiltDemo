@@ -1,11 +1,8 @@
-package com.wizzpass.hilt.db.repository
+package com.wizzpass.hilt.data.local.db.repository
 
-import com.wizzpass.hilt.db.dao.SecondaryDriverDao
-import com.wizzpass.hilt.db.dao.SupervisorDao
-import com.wizzpass.hilt.db.dao.VehiclesDao
-import com.wizzpass.hilt.db.entity.SecondaryDriver
-import com.wizzpass.hilt.db.entity.Supervisor
-import com.wizzpass.hilt.db.entity.Vehicles
+import com.wizzpass.hilt.data.local.db.dao.VehiclesDao
+import com.wizzpass.hilt.data.local.db.entity.Vehicles
+
 import javax.inject.Inject
 
 class VehicleDBRepository  @Inject constructor(private val vehicleDao: VehiclesDao){

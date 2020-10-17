@@ -1,4 +1,4 @@
-package com.wizzpass.hilt.db
+package com.wizzpass.hilt.data.local.db
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

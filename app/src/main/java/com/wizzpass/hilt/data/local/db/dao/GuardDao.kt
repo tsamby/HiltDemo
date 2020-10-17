@@ -1,10 +1,9 @@
-package com.wizzpass.hilt.db.dao
+package com.wizzpass.hilt.data.local.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.wizzpass.hilt.db.entity.Guard
-import com.wizzpass.hilt.db.entity.ResAddress
-import io.reactivex.Single
+import com.wizzpass.hilt.data.local.db.entity.Guard
+
 
 
 /**

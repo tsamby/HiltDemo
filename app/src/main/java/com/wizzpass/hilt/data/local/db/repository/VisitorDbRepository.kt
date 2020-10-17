@@ -1,9 +1,8 @@
-package com.wizzpass.hilt.db.repository
+package com.wizzpass.hilt.data.local.db.repository
 
-import com.wizzpass.hilt.db.dao.ResidentDao
-import com.wizzpass.hilt.db.dao.VisitorDao
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.Visitor
+import com.wizzpass.hilt.data.local.db.dao.VisitorDao
+import com.wizzpass.hilt.data.local.db.entity.Visitor
+
 import javax.inject.Inject
 
 /**

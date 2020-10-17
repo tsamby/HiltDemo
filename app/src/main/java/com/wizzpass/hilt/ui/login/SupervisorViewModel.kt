@@ -2,10 +2,8 @@ package com.wizzpass.hilt.ui.login
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.wizzpass.hilt.db.entity.Guard
-import com.wizzpass.hilt.db.entity.Supervisor
-import com.wizzpass.hilt.db.repository.GuardDBRepository
-import com.wizzpass.hilt.db.repository.SupervisorDBRepository
+import com.wizzpass.hilt.data.local.db.entity.Supervisor
+import com.wizzpass.hilt.data.local.db.repository.SupervisorDBRepository
 import kotlinx.coroutines.launch
 
 /**

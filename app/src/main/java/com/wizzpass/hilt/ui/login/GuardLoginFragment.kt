@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,10 +18,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.Guard
-import com.wizzpass.hilt.db.entity.ResAddress
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.Supervisor
+import com.wizzpass.hilt.data.local.db.entity.Guard
+import com.wizzpass.hilt.data.local.db.entity.ResAddress
+import com.wizzpass.hilt.data.local.db.entity.Supervisor
 import com.wizzpass.hilt.ui.register.ResAddressViewModel
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
@@ -200,6 +200,16 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
                 requestPermissions(arrayOf(Manifest.permission.SEND_SMS), 10)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
 }

@@ -1,7 +1,7 @@
-package com.wizzpass.hilt.db.repository
+package com.wizzpass.hilt.data.local.db.repository
 
-import com.wizzpass.hilt.db.dao.ResAddressDao
-import com.wizzpass.hilt.db.entity.ResAddress
+import com.wizzpass.hilt.data.local.db.dao.ResAddressDao
+import com.wizzpass.hilt.data.local.db.entity.ResAddress
 import java.util.ArrayList
 import javax.inject.Inject
 

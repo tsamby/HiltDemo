@@ -6,10 +6,8 @@ package com.wizzpass.hilt.ui.visitor
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.Visitor
-import com.wizzpass.hilt.db.repository.ResidentDBRepository
-import com.wizzpass.hilt.db.repository.VisitorDBRepository
+import com.wizzpass.hilt.data.local.db.entity.Visitor
+import com.wizzpass.hilt.data.local.db.repository.VisitorDBRepository
 import kotlinx.coroutines.launch
 
 /**

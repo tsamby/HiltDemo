@@ -2,8 +2,8 @@ package com.wizzpass.hilt.ui.secondaryDrivers
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.wizzpass.hilt.db.entity.SecondaryDriver
-import com.wizzpass.hilt.db.repository.SecondaryDriverRepository
+import com.wizzpass.hilt.data.local.db.entity.SecondaryDriver
+import com.wizzpass.hilt.data.local.db.repository.SecondaryDriverRepository
 import kotlinx.coroutines.launch
 
 /**

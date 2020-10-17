@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.Supervisor
+import com.wizzpass.hilt.data.local.db.entity.Supervisor
 import com.wizzpass.hilt.ui.login.SupervisorViewModel
 import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.ui.visitor.VisitorDetailsFragment
@@ -137,6 +138,16 @@ class SearchResultFragment : Fragment() {
 
             }
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
     override fun onDestroy() {

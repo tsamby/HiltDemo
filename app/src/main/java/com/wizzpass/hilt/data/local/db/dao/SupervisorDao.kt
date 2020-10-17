@@ -1,12 +1,12 @@
-package com.wizzpass.hilt.db.dao
+package com.wizzpass.hilt.data.local.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.wizzpass.hilt.db.entity.Guard
-import com.wizzpass.hilt.db.entity.Supervisor
+import com.wizzpass.hilt.data.local.db.entity.Supervisor
+
 
 /**
  * Created by novuyo on 20,September,2020

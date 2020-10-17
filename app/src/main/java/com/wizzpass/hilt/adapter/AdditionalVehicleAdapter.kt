@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.db.entity.Vehicles
+import com.wizzpass.hilt.data.local.db.entity.Vehicles
 import kotlinx.android.synthetic.main.secondary_driver_list_item.view.*
 
 class AdditionalVehicleAdapter(

@@ -1,4 +1,4 @@
-package com.wizzpass.hilt.db.entity
+package com.wizzpass.hilt.data.local.db.entity
 
 import androidx.annotation.Nullable
 import androidx.room.Entity

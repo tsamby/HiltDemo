@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,9 +23,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.adapter.SecondaryDriverAdapter
-import com.wizzpass.hilt.db.entity.ResAddress
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.SecondaryDriver
+import com.wizzpass.hilt.data.local.db.entity.ResAddress
+import com.wizzpass.hilt.data.local.db.entity.Resident
+import com.wizzpass.hilt.data.local.db.entity.SecondaryDriver
 import com.wizzpass.hilt.ui.additionalVehicles.AdditionalVehiclesFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.ui.secondaryDrivers.SecondaryDriverFragment
@@ -586,12 +587,11 @@ private fun findSecondaryDriver(){
 
     override fun onResume() {
         super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
 
-        /*if(resident!=null) {
-            //secondaryDriverViewModel.fetchSecondaryDriversByCarReg(resident!!.carReg)
-            secondaryDriverViewModel.fetchSecondaryDriversByCarReg("CV70SBGP ")
-        }*/
-
-
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 }

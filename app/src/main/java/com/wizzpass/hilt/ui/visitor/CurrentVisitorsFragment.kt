@@ -5,34 +5,24 @@ package com.wizzpass.hilt.ui.visitor
  */
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wizzpass.hilt.R
-import com.wizzpass.hilt.adapter.ResidentAdapter
 import com.wizzpass.hilt.adapter.VisitorAdapter
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.SecondaryDriver
-import com.wizzpass.hilt.db.entity.Visitor
-import com.wizzpass.hilt.ui.additionalVehicles.AdditionalVehiclesFragment
-import com.wizzpass.hilt.ui.register.RegisterViewModel
-import com.wizzpass.hilt.ui.search.ResidentFoundFragment
+import com.wizzpass.hilt.data.local.db.entity.Visitor
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.util.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_resident_found.*
-import kotlinx.android.synthetic.main.fragment_resident_found_two.*
 import kotlinx.android.synthetic.main.fragment_resident_list.*
-import kotlinx.android.synthetic.main.fragment_search_result.*
+
 
 
 @AndroidEntryPoint
@@ -96,6 +86,13 @@ class CurrentVistorsFragment : Fragment(), LifecycleOwner , VisitorAdapter.OnIte
         super.onResume()
         observeViewModel()
         uploadResidentList(visitors)
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
     private fun initAdapter(){

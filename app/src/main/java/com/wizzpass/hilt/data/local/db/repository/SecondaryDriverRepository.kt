@@ -1,9 +1,7 @@
-package com.wizzpass.hilt.db.repository
+package com.wizzpass.hilt.data.local.db.repository
 
-import com.wizzpass.hilt.db.dao.GuardDao
-import com.wizzpass.hilt.db.dao.SecondaryDriverDao
-import com.wizzpass.hilt.db.entity.Guard
-import com.wizzpass.hilt.db.entity.SecondaryDriver
+import com.wizzpass.hilt.data.local.db.dao.SecondaryDriverDao
+import com.wizzpass.hilt.data.local.db.entity.SecondaryDriver
 import javax.inject.Inject
 
 /**

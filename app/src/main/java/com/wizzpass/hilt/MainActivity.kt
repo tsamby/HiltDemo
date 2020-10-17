@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.wizzpass.hilt.db.entity.Supervisor
+import com.wizzpass.hilt.data.local.db.entity.Supervisor
 import com.wizzpass.hilt.ui.admin.AdminUserFragment
 import com.wizzpass.hilt.ui.login.GuardLoginFragment
 import com.wizzpass.hilt.ui.login.SupervisorViewModel

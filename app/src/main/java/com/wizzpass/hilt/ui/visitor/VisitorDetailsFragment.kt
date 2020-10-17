@@ -1,7 +1,7 @@
 package com.wizzpass.hilt.ui.visitor
 
 import android.Manifest
-import com.wizzpass.hilt.db.entity.Visitor
+
 import com.wizzpass.hilt.ui.register.RegisterViewModel
 import com.wizzpass.hilt.ui.register.ResAddressViewModel
 
@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.Nullable
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -32,9 +33,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.adapter.SecondaryDriverAdapter
-import com.wizzpass.hilt.db.entity.ResAddress
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.SecondaryDriver
+import com.wizzpass.hilt.data.local.db.entity.ResAddress
+import com.wizzpass.hilt.data.local.db.entity.Resident
+import com.wizzpass.hilt.data.local.db.entity.SecondaryDriver
+import com.wizzpass.hilt.data.local.db.entity.Visitor
 import com.wizzpass.hilt.ui.additionalVehicles.AdditionalVehiclesFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.ui.secondaryDrivers.SecondaryDriverFragment
@@ -528,9 +530,12 @@ class VisitorDetailsFragment  : Fragment(){
 
     override fun onResume() {
         super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
 
-
-
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
     fun sendSmsMsgFnc(mblNumVar: String?, smsMsgVar: String?) {

@@ -2,10 +2,8 @@ package com.wizzpass.hilt.ui.additionalVehicles
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.wizzpass.hilt.db.entity.SecondaryDriver
-import com.wizzpass.hilt.db.entity.Vehicles
-import com.wizzpass.hilt.db.repository.SecondaryDriverRepository
-import com.wizzpass.hilt.db.repository.VehicleDBRepository
+import com.wizzpass.hilt.data.local.db.entity.Vehicles
+import com.wizzpass.hilt.data.local.db.repository.VehicleDBRepository
 import kotlinx.coroutines.launch
 
 public class AdditionalVehiclesViewModel@ViewModelInject constructor(private val vehicleDBRepository: VehicleDBRepository) :

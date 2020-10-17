@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.wizzpass.hilt.db.entity.Resident
-import com.wizzpass.hilt.db.entity.Visitor
+import com.wizzpass.hilt.data.local.db.entity.Resident
+import com.wizzpass.hilt.data.local.db.entity.Visitor
 
 /**
  * Created by novuyo on 20,September,2020

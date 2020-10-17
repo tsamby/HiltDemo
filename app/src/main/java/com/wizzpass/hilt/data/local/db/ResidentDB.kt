@@ -1,4 +1,4 @@
-package com.wizzpass.hilt.db
+package com.wizzpass.hilt.data.local.db
 
 /**
  * Created by novuyo on 20,September,2020
@@ -8,10 +8,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.wizzpass.hilt.db.dao.*
-import com.wizzpass.hilt.db.entity.*
+import com.wizzpass.hilt.data.local.db.dao.*
+import com.wizzpass.hilt.data.local.db.entity.*
 
-@Database(entities = [Supervisor::class, Guard::class,Resident::class,ResAddress::class, SecondaryDriver::class,Vehicles::class, Visitor::class], version = 4, exportSchema = false)
+
+@Database(entities = [Supervisor::class, Guard::class, Resident::class, ResAddress::class, SecondaryDriver::class,Vehicles::class, Visitor::class], version = 4, exportSchema = false)
 
 @TypeConverters(Converters::class)
 abstract class ResidentDB : RoomDatabase() {
