@@ -577,6 +577,7 @@ private fun findSecondaryDriver(){
                 }else if(carImage){
                     img_car.setColorFilter(null)
                     img_car.setImageURI(Uri.fromFile(imgFile))
+                    myList.clear()
                     carProfilePhotoPath = currentPhotoPath
                     myList.add(carProfilePhotoPath!!)
 
