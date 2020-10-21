@@ -277,7 +277,7 @@ class SearchFragment : Fragment() {
                     }
                 } else if (t.size > 1) {
 
-                    if(registerViewModel.getAdminPrefs()) {
+                    if(admin) {
 
                     }else{
                         var list = arrayListOf<Resident>()
@@ -292,18 +292,13 @@ class SearchFragment : Fragment() {
                         }
                     }
                 } else {
-
                     if(registerViewModel.getAdminPrefs()){
-                        launchRegisterResidentResidentData(t[0], searchFieldUsed)
+                        launchRegisterResidentFragment(inputString, searchFieldUsed)
                     }else {
                         if (isVisitor) {
-                            launchVisitorDetailWithDataFragmentFound(
-                                t[0],
-                                inputText!!,
-                                searchText!!
-                            )
+                            showErrorDialog()
                         } else {
-                            launchResultWithDataFragment(t[0], searchFieldUsed)
+                            launchSearchResultFragment(inputString, searchFieldUsed)
                         }
                     }
                 }

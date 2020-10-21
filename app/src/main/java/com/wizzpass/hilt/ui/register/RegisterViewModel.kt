@@ -101,6 +101,14 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
         return sharedPrefs.getBooleanValue("isAdmin")
     }
 
+    fun setNewResiPrefs(){
+        sharedPrefs.setBooleanValue("isNewResident", true)
+    }
+
+    fun getNewResiPrefs(): Boolean{
+        return sharedPrefs.getBooleanValue("isNewResident")
+    }
+
     fun fetchError(): LiveData<String> = error
 
     fun checkIfDetailsMissing(): LiveData<String> = residentDetailsMissing

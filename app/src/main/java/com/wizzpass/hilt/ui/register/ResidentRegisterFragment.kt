@@ -169,10 +169,11 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
             uploadResidentData(resident!!)
             secondaryDriverViewModel.fetchSecondaryDriversByCarReg(resident!!.carReg)
             if(registerViewModel.getAdminPrefs()){
-                println("isTestrEG ${registerViewModel.getAdminPrefs()}")
                 bt_register.visibility = View.GONE
                 bt_update.visibility = View.VISIBLE
                 bt_delete.visibility = View.VISIBLE
+
+
             }
 
         }

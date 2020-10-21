@@ -57,9 +57,10 @@ fun FragmentActivity.replaceFragmentWithDataTest(fragment: Fragment, frameId: In
         transaction.replace(frameId, fragment)
         transaction.addToBackStack(null)
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        //transaction.commit()
+
     }
 }
+
 
 fun FragmentActivity.replaceFragmentWithDataTestVisitor(fragment: Fragment, frameId: Int, visitor : Visitor) {
     supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
