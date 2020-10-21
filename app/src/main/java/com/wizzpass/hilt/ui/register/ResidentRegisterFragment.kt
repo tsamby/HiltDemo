@@ -603,8 +603,6 @@ private fun findSecondaryDriver(){
                      myList.clear()
                      carProfilePhotoPath = getRealPathFromURI(data?.data!!)
                      myList.add(carProfilePhotoPath!!)
-
-
                  }
 
 
