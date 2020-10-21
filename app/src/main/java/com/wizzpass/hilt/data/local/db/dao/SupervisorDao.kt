@@ -1,10 +1,8 @@
 package com.wizzpass.hilt.data.local.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import com.wizzpass.hilt.data.local.db.entity.Guard
 import com.wizzpass.hilt.data.local.db.entity.Supervisor
 
 
@@ -29,6 +27,7 @@ interface SupervisorDao {
     @Query("SELECT COUNT(*) FROM guard")
     fun getRowCount(): LiveData<Int>?
 
-
+    @Update
+    suspend fun update(supervisor: Supervisor)
 
 }

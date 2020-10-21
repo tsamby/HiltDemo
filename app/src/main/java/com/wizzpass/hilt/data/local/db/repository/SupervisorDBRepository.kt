@@ -1,6 +1,7 @@
 package com.wizzpass.hilt.data.local.db.repository
 
 import com.wizzpass.hilt.data.local.db.dao.SupervisorDao
+import com.wizzpass.hilt.data.local.db.entity.Guard
 import com.wizzpass.hilt.data.local.db.entity.Supervisor
 import javax.inject.Inject
 
@@ -17,4 +18,7 @@ class SupervisorDBRepository  @Inject constructor(private val supervisorDao: Sup
     suspend fun  fetchSupervisorByPassword(password : String) = supervisorDao.fetchSupervisorByPassword(password)
 
     suspend fun getSupervisorCount() = supervisorDao.getRowCount()
+
+    suspend fun updateSupervisorData(supervisor: Supervisor) = supervisorDao.update(supervisor)
+
 }

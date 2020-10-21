@@ -65,9 +65,12 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         super.onViewCreated(view, savedInstanceState)
         this.lifecycle.addObserver(guardLoginViewModel)
 
+
         setBorderRed(emergency)
 
         fetchDataFromViewModel()
+
+
 
         buttonLogin.setOnClickListener {
             guardLoginViewModel.fetchGuardByPasword(getEnteredSearchDetails())
@@ -97,7 +100,15 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         return Guard(
             0L,
             "admin",
-            "0000"
+            "0501"
+        )
+    }
+
+    fun updateGuardDetailsDetails(guardId : Long) : Guard {
+        return Guard(
+            guardId,
+            "admin",
+            "0501"
         )
     }
 
@@ -105,7 +116,15 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
         return Supervisor(
             0L,
             "admin",
-            "0000"
+            "2306"
+        )
+    }
+
+    fun updateSupervisorDetailsDetails(supervisorId : Long) : Supervisor {
+        return Supervisor(
+            supervisorId,
+            "admin",
+            "2306"
         )
     }
 
@@ -118,13 +137,38 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
     private fun fetchDataFromViewModel(){
         guardLoginViewModel.guardFinalList.observe(viewLifecycleOwner,
             Observer<MutableList<Guard>> {
-                    t -> println("Received UserInfo List ${t.size}")
+                    t ->
                if(t.size==0){
                    guardLoginViewModel.insertGuardInfo(getGuardDetailsDetails())
                    supervisorViewModel.insertSupervisorInfo(getSupervisorDetailsDetails())
                    resAddressViewModel.insertResAddressInfo()
+               }else{
+                   var guard = t[0]
+                   if(guard.password.equals("0000")){
+                       guardLoginViewModel.updateGuardData(updateGuardDetailsDetails(guard.guardId))
+                       supervisorViewModel.fetchAllSupervisors()
+                       fetchSupervisorFromViewModel()
+                   }
                }
 
+            }
+        )
+
+
+
+    }
+
+    private fun fetchSupervisorFromViewModel(){
+        supervisorViewModel.supervisorFinalList.observe(viewLifecycleOwner,
+            Observer<MutableList<Supervisor>> {
+                    t -> println("Received UserInfo List ${t}")
+                if(t.size==1){
+                    var supervisor = t[0]
+                    if(supervisor.password.equals("0000")) {
+                        supervisorViewModel.updateSupervisorData(updateSupervisorDetailsDetails(supervisor.supId)
+                        )
+                    }
+                }
             }
         )
     }

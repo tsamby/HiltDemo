@@ -3,7 +3,7 @@ package com.wizzpass.hilt.data.local.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.wizzpass.hilt.data.local.db.entity.Guard
-
+import com.wizzpass.hilt.data.local.db.entity.Resident
 
 
 /**
@@ -26,6 +26,7 @@ interface GuardDao {
     @Query("SELECT COUNT(*) FROM guard")
     fun getRowCount(): LiveData<Int>?
 
-
+    @Update
+    suspend fun update(guard: Guard)
 
 }

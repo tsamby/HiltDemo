@@ -2,6 +2,7 @@ package com.wizzpass.hilt.ui.login
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.wizzpass.hilt.data.local.db.entity.Guard
 import com.wizzpass.hilt.data.local.db.entity.Supervisor
 import com.wizzpass.hilt.data.local.db.repository.SupervisorDBRepository
 import com.wizzpass.hilt.data.local.prefs.SharedPrefs
@@ -46,6 +47,12 @@ public class SupervisorViewModel @ViewModelInject constructor(private val superv
                 val guardId: Long = supervisorDBRepository.insertSupervisorData(supervisor)
                 insertedId.postValue(guardId)
             }
+        }
+    }
+
+    fun updateSupervisorData(supervisor: Supervisor){
+        viewModelScope.launch {
+            supervisorDBRepository.updateSupervisorData(supervisor)
         }
     }
 

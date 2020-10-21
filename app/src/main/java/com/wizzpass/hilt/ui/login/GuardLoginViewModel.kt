@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.wizzpass.hilt.data.local.db.entity.Guard
+import com.wizzpass.hilt.data.local.db.entity.Resident
 import com.wizzpass.hilt.data.local.db.repository.GuardDBRepository
 import com.wizzpass.hilt.data.local.prefs.SharedPrefs
 import kotlinx.coroutines.launch
@@ -39,7 +40,6 @@ public class GuardLoginViewModel @ViewModelInject constructor(private val guardD
 
     fun insertGuardInfo(guard: Guard) {
         viewModelScope.launch {
-
             if(guard.userName.isNullOrEmpty() ||
                 guard.password.isNullOrEmpty()
                  ){
@@ -54,7 +54,11 @@ public class GuardLoginViewModel @ViewModelInject constructor(private val guardD
     fun checkIfDbEmpty(){
 
     }
-
+    fun updateGuardData(guard: Guard){
+        viewModelScope.launch {
+            guardDBRepository.updateGuardData(guard)
+        }
+    }
 
     fun fetchError(): LiveData<String> = error
 
