@@ -105,6 +105,10 @@ public class RegisterViewModel@ViewModelInject constructor(private val residentD
         sharedPrefs.setBooleanValue("isNewResident", true)
     }
 
+    fun setClearResiPrefs(){
+        sharedPrefs.setBooleanValue("isNewResident", false)
+    }
+
     fun getNewResiPrefs(): Boolean{
         return sharedPrefs.getBooleanValue("isNewResident")
     }

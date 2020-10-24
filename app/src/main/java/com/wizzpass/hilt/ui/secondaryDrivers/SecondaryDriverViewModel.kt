@@ -2,6 +2,7 @@ package com.wizzpass.hilt.ui.secondaryDrivers
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.wizzpass.hilt.data.local.db.entity.Resident
 import com.wizzpass.hilt.data.local.db.entity.SecondaryDriver
 import com.wizzpass.hilt.data.local.db.repository.SecondaryDriverRepository
 import kotlinx.coroutines.launch
@@ -69,7 +70,12 @@ public class SecondaryDriverViewModel@ViewModelInject constructor(private val se
 
 
     }
+    fun deleteSecondaryDriver(secondaryDriver: SecondaryDriver){
+        viewModelScope.launch {
+            secondaryDriverRepository.deleteSecondaryDriverData(secondaryDriver)
 
+        }
+    }
     fun fetchSecondaryDriversByCarReg(searchField : String){
         viewModelScope.launch {
             secondaryDriversLinkedToCar = secondaryDriverRepository.fetchSecondaryByCarReg(searchField)

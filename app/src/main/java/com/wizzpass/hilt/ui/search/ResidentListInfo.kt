@@ -22,6 +22,7 @@ import com.wizzpass.hilt.R
 import com.wizzpass.hilt.adapter.ResidentAdapter
 import com.wizzpass.hilt.data.local.db.entity.Resident
 import com.wizzpass.hilt.ui.register.RegisterViewModel
+import com.wizzpass.hilt.ui.register.ResidentRegisterFragment
 import com.wizzpass.hilt.ui.visitor.VisitorDetailsFragment
 import com.wizzpass.hilt.util.replaceFragment
 import com.wizzpass.hilt.util.replaceFragmentWithDataTest
@@ -44,16 +45,12 @@ class ResidentListInfo : Fragment(), LifecycleOwner , ResidentAdapter.OnItemClic
     var isVisitor : Boolean = false
 
     private val mainViewModel :  RegisterViewModel by viewModels()
+    private val registerViewModel : RegisterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
-
-
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,7 +77,6 @@ class ResidentListInfo : Fragment(), LifecycleOwner , ResidentAdapter.OnItemClic
         super.onViewCreated(view, savedInstanceState)
         this.lifecycle.addObserver(mainViewModel)
         textView8.setText(residents[0].address + " " + residents[0].street_address)
-
         imageView5.setOnClickListener {
             launchSearchFragment()
         }
@@ -125,16 +121,24 @@ class ResidentListInfo : Fragment(), LifecycleOwner , ResidentAdapter.OnItemClic
     override fun onItemClick(position: Int) {
         val clickedResident : Resident = residents[position]
 
-        if(isVisitor){
-            launchVisitorDetailsFragment(clickedResident)
+        if(registerViewModel.getAdminPrefs()) {
+
+            launchRegisterResidentResidentData(clickedResident)
         }else {
-            launchResultWithDataFragment(clickedResident)
+            if (isVisitor) {
+                launchVisitorDetailsFragment(clickedResident)
+            } else {
+                launchResultWithDataFragment(clickedResident)
+            }
         }
 
     }
 
     fun launchResultWithDataFragment(resident : Resident) {
         activity?.replaceFragmentWithDataTest(ResidentFoundFragment(), mContainerId, resident)
+    }
+    fun launchRegisterResidentResidentData(resident : Resident) {
+        activity?.replaceFragmentWithDataTest(ResidentRegisterFragment(), mContainerId, resident)
     }
 
     fun launchVisitorDetailsFragment(resident : Resident) {

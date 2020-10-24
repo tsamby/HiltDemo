@@ -56,6 +56,13 @@ class SecondaryDriverAdapter(
             }
         }
 
+
+
+    }
+
+    fun removeAt(position: Int) {
+        postList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     interface OnItemClickListener {

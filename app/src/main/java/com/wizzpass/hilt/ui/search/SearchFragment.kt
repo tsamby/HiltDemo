@@ -59,17 +59,12 @@ class SearchFragment : Fragment() {
         searchView = inflater.inflate(R.layout.fragment_search, container, false)
         mContainerId = container?.id?:-1
 
-        println("isTest ${registerViewModel.getAdminPrefs()}")
-
-
         if(arguments!=null) {
             isVisitor = arguments?.getBoolean("isVisitor", false)!!
-            println("isVisitor ${isVisitor}")
             visInputString = arguments?.getString("inputText").toString()
             inputText = arguments?.getString("inputText")
             searchText = arguments?.getString("searchField")
             admin = arguments?.getBoolean("admin", false)!!
-            println("isAdmin ${admin}")
         }
         return  searchView
     }
@@ -78,6 +73,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        registerViewModel.setClearResiPrefs()
         if(isVisitor){
             layout_carReg.visibility = View.GONE
             textView4.visibility = View.GONE
@@ -95,8 +91,6 @@ class SearchFragment : Fragment() {
 
         bt_register.setOnClickListener {
             if (!et_carReg.text.toString().isEmpty()) {
-
-
                 searchFieldUsed = "car_reg"
                 inputString = et_carReg.text.toString()
                 registerViewModel.fetchResidentByCarReg(et_carReg.text.toString())
@@ -115,20 +109,15 @@ class SearchFragment : Fragment() {
                 }
 
             } else if (!et_address.text.toString().isEmpty()) {
-
                 checkIfAddressExists()
-
-
             } else {
                 Toast.makeText(activity, "Search Filed can not be empty", Toast.LENGTH_LONG).show()
                 if (et_carReg.text.toString().isEmpty()) {
                     et_carReg.setError("Enter car registration")
                 }
-
                 if (et_mobile.text.toString().isEmpty()) {
                     et_mobile.setError("Enter mobile Number")
                 }
-
                 if (et_address.text.toString().isEmpty()) {
                     et_address.setError("Enter Address")
                 }
@@ -139,11 +128,9 @@ class SearchFragment : Fragment() {
 
         }
 
-
         buttonViewCurrentParkers.setOnClickListener {
             launchCuurentVisitorsFragment()
         }
-
         if(registerViewModel.getAdminPrefs()){
             textView32.visibility = View.VISIBLE
         }

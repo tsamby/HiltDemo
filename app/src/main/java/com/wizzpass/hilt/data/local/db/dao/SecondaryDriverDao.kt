@@ -1,10 +1,8 @@
 package com.wizzpass.hilt.data.local.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import com.wizzpass.hilt.data.local.db.entity.Resident
 import com.wizzpass.hilt.data.local.db.entity.SecondaryDriver
 
 
@@ -35,4 +33,8 @@ interface  SecondaryDriverDao{
 
     @Query("select * From secondary_driver WHERE carReg = :carReg")
     fun  fetchAllSecondaryDriverLinkedToCarReg(carReg : String) : LiveData<MutableList<SecondaryDriver>>
+
+    @Delete
+    suspend fun delete(secondaryDriver: SecondaryDriver) : Int
+
 }

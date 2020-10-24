@@ -2,6 +2,7 @@ package com.wizzpass.hilt.ui.search
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,6 @@ import com.wizzpass.hilt.util.replaceFragment
 import com.wizzpass.hilt.util.setBorder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_register_resident_two.*
-import kotlinx.android.synthetic.main.fragment_resident_found.*
 import kotlinx.android.synthetic.main.fragment_resident_found.bt_enter
 import kotlinx.android.synthetic.main.fragment_resident_found.carImageLabel
 import kotlinx.android.synthetic.main.fragment_resident_found.imageView
@@ -39,7 +39,6 @@ import kotlinx.android.synthetic.main.fragment_resident_found.textViewMobile
 import kotlinx.android.synthetic.main.fragment_resident_found.textViewName
 import kotlinx.android.synthetic.main.fragment_resident_found.textViewSurname
 import kotlinx.android.synthetic.main.fragment_resident_found_two.*
-import kotlinx.android.synthetic.main.fragment_resident_list.*
 import kotlinx.android.synthetic.main.fragment_search_result.*
 import java.io.File
 import java.util.*
@@ -97,6 +96,14 @@ class ResidentFoundFragment : Fragment() , SecondaryDriverAdapter.OnItemClickLis
 
         setBorder(innerConstraintLayout)
         if(resident!=null) {
+
+
+            pb_loading_found.visibility = View.VISIBLE
+            Handler().postDelayed({
+                pb_loading_found.visibility = View.GONE
+            }, 2000)
+
+
             textViewName.setText(resident!!.fName)
             textViewSurname.setText(resident!!.lname)
             textViewCarReg.setText(resident!!.carReg)
@@ -138,6 +145,8 @@ class ResidentFoundFragment : Fragment() , SecondaryDriverAdapter.OnItemClickLis
 
 
             }
+
+
         }
 
         bt_enter.setOnClickListener {

@@ -1,6 +1,7 @@
 package com.wizzpass.hilt.data.local.db.repository
 
 import com.wizzpass.hilt.data.local.db.dao.SecondaryDriverDao
+import com.wizzpass.hilt.data.local.db.entity.Resident
 import com.wizzpass.hilt.data.local.db.entity.SecondaryDriver
 import javax.inject.Inject
 
@@ -23,6 +24,8 @@ class SecondaryDriverRepository  @Inject constructor(private val secondaryDriver
     suspend fun  fetchSecondaryByMobile (searchField : String) = secondaryDriverDao.fetchAllSecondaryDriverLinkedToMobile(searchField)
 
     suspend fun  fetchSecondaryByCarReg (searchField : String) = secondaryDriverDao.fetchAllSecondaryDriverLinkedToCarReg(searchField)
+
+    suspend fun deleteSecondaryDriverData(secondaryDriver: SecondaryDriver) = secondaryDriverDao.delete(secondaryDriver)
 
 
 }

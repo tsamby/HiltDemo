@@ -8,11 +8,15 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -20,7 +24,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.adapter.SecondaryDriverAdapter
 import com.wizzpass.hilt.data.local.db.entity.ResAddress
@@ -30,9 +36,7 @@ import com.wizzpass.hilt.ui.additionalVehicles.AdditionalVehiclesFragment
 import com.wizzpass.hilt.ui.search.SearchFragment
 import com.wizzpass.hilt.ui.secondaryDrivers.SecondaryDriverFragment
 import com.wizzpass.hilt.ui.secondaryDrivers.SecondaryDriverViewModel
-import com.wizzpass.hilt.util.replaceFragment
-import com.wizzpass.hilt.util.replaceFragmentWithNoHistory
-import com.wizzpass.hilt.util.replaceFragmentWithStringData
+import com.wizzpass.hilt.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_register_resident.bt_register
 import kotlinx.android.synthetic.main.fragment_register_resident.et_address
@@ -114,7 +118,11 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
         super.onViewCreated(view, savedInstanceState)
 
 
+
         if(resident==null) {
+            if(registerViewModel.getAdminPrefs()){
+              registerViewModel.setNewResiPrefs()
+            }
             setUi(inputText!!, searchText!!)
         }
 
@@ -163,24 +171,40 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
             pickImageFromGallery();
         }
 
-
-
         if(resident!=null) {
+
+
+
             uploadResidentData(resident!!)
             secondaryDriverViewModel.fetchSecondaryDriversByCarReg(resident!!.carReg)
+            pb_loading.visibility = View.VISIBLE
+            Handler().postDelayed({
+                //doSomethingHere()
+                pb_loading.visibility = View.GONE
+            }, 2000)
+
+
             if(registerViewModel.getAdminPrefs()){
-                bt_register.visibility = View.GONE
-                bt_update.visibility = View.VISIBLE
-                bt_delete.visibility = View.VISIBLE
+                if(registerViewModel.getNewResiPrefs()){
+                    bt_register.visibility = View.VISIBLE
+                    bt_update.visibility = View.GONE
+                    bt_delete.visibility = View.GONE
+                }else {
 
-
+                    bt_register.visibility = View.GONE
+                    bt_update.visibility = View.VISIBLE
+                    bt_delete.visibility = View.VISIBLE
+                }
             }
-
         }
 
         bt_delete.setOnClickListener {
             if(resident!=null) {
+                for ( driver in drivers){
+                    secondaryDriverViewModel.deleteSecondaryDriver(driver)
+                }
                registerViewModel.deleteResidentData(resident!!)
+
                 launchSearchFragment()
             }
         }
@@ -194,10 +218,28 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
         observeViewModel()
 
         initAdapter()
+
+
     }
 
     fun uploadDriversList(secondaryDrivers : ArrayList<SecondaryDriver>){
+
+
+        drivers = secondaryDrivers
         driversAdapter?.refreshAdapter(secondaryDrivers)
+        /*val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val pos = viewHolder.adapterPosition
+                if(pos>=0) {
+                    secondaryDrivers.removeAt(pos)
+                    driversAdapter!!.notifyItemRemoved(pos)
+                }
+
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView2)*/
     }
 
 
@@ -222,15 +264,55 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = driversAdapter
-
         }
 
     }
 
+
+
     override fun onItemClick(position: Int) {
+        val clickedDriver : SecondaryDriver = drivers[position]
+        showSecondaryDriverDetails(clickedDriver)
+
+    }
+
+    fun showSecondaryDriverDetails(driver : SecondaryDriver) {
+
+        var dialogBuilder = android.app.AlertDialog.Builder(context).create()
+        val inflater = this.layoutInflater
+        val dialogView: View = inflater.inflate(R.layout.custom_driver_delete_dialog, null)
+        val textView = dialogView.findViewById<View>(R.id.textView9) as TextView
+        textView.setText(driver.fName + " " + driver.lname)
+        val button1 = dialogView.findViewById<View>(R.id.button) as Button
+        val buttonCancel = dialogView.findViewById<View>(R.id.button5) as Button
+        val imageView  = dialogView.findViewById<View>(R.id.imageView8) as ImageView
+        val imgFile = File(driver.profImage)
+
+        if (imgFile.exists()) {
+            imageView.setColorFilter(null)
+            imageView.setImageURI(Uri.fromFile(imgFile))
+        }
+
+
+        button1.setOnClickListener { view ->
+            dialogBuilder!!.dismiss()
+            secondaryDriverViewModel.deleteSecondaryDriver(driver!!)
+            //launchSearchFragment()
+        }
+        buttonCancel.setOnClickListener { view ->
+            dialogBuilder!!.dismiss()
+
+        }
+        dialogBuilder!!.setView(dialogView)
+        dialogBuilder!!.show()
+        dialogBuilder!!.setOnCancelListener {
+
+
+        }
 
 
     }
+
 
     fun setUi(inputText : String, searchField : String){
 
@@ -292,13 +374,10 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
     }
 
     fun checkIfAddressExists(){
-
-
         if(!et_address.text.toString().isEmpty()) {
             resAddressViewModel.cheeckIfAddressExists(et_address.text.toString())
             checkAdddressDataFromViewModel()
         }
-
     }
 
     fun getEnteredResidentDetails() : Resident {
@@ -339,6 +418,9 @@ class ResidentRegisterFragment  : Fragment(), SecondaryDriverAdapter.OnItemClick
 
 
     fun observeViewModel(){
+
+
+
         registerViewModel.fetchError().observe(viewLifecycleOwner,
             Observer<String> {
                     t -> Toast.makeText(activity,t, Toast.LENGTH_LONG).show()
