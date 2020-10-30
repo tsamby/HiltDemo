@@ -2,9 +2,11 @@ package com.wizzpass.hilt
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.google.zxing.integration.android.IntentIntegrator
 import com.wizzpass.hilt.data.local.db.entity.Supervisor
 import com.wizzpass.hilt.ui.admin.AdminUserFragment
 import com.wizzpass.hilt.ui.login.GuardLoginFragment
@@ -192,6 +195,24 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
+    /*override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        val result =
+            IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents == null) {
+            } else {
+
+                Log.d("ContentsM", result.contents)
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }*/
 
 
 

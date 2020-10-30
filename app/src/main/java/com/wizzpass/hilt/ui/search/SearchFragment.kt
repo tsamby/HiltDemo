@@ -1,6 +1,8 @@
 package com.wizzpass.hilt.ui.search
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.zxing.integration.android.IntentIntegrator
 import com.wizzpass.hilt.R
 import com.wizzpass.hilt.data.local.db.entity.ResAddress
 import com.wizzpass.hilt.data.local.db.entity.Resident
@@ -26,6 +29,8 @@ import kotlinx.android.synthetic.main.fragment_register_resident.et_address
 import kotlinx.android.synthetic.main.fragment_register_resident.et_carReg
 import kotlinx.android.synthetic.main.fragment_register_resident.et_mobile
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.layout_carReg
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -43,6 +48,7 @@ class SearchFragment : Fragment() {
     var inputText: String? = ""
     var searchText: String? = ""
     var admin : Boolean = false
+    private var qrScan: IntentIntegrator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,6 +137,22 @@ class SearchFragment : Fragment() {
         buttonViewCurrentParkers.setOnClickListener {
             launchCuurentVisitorsFragment()
         }
+
+        bt_scan.setOnClickListener {
+            qrScan = IntentIntegrator.forSupportFragment(this@SearchFragment)
+            qrScan!!.setPrompt("scanning")
+            qrScan!!.initiateScan()
+            /*val integrator = IntentIntegrator.forSupportFragment(this@SearchFragment)
+            integrator.setPrompt("Scan a barcode")
+            integrator.setCameraId(0) // Use a specific camera of the device
+            integrator.setOrientationLocked(true)
+            integrator.setBeepEnabled(true)
+            integrator.captureActivity = CaptureActivityPortrait::class.java
+            integrator.initiateScan()
+
+             */
+        }
+
         if(registerViewModel.getAdminPrefs()){
             textView32.visibility = View.VISIBLE
         }
@@ -204,7 +226,7 @@ class SearchFragment : Fragment() {
             Observer<Resident> {
                     t -> println("Received UserInfo2 List ${t}")
                 if(t==null){
-
+                        Log.d("halla", "hello")
                     if(registerViewModel.getAdminPrefs()){
                         launchRegisterResidentFragment(inputString, searchFieldUsed)
                     }else {
@@ -326,4 +348,33 @@ class SearchFragment : Fragment() {
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val result =
+            IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents == null) {
+
+
+            } else {
+
+                Log.d("Contents", result.contents)
+                searchFieldUsed = "car_reg"
+                inputString = result.contents
+                registerViewModel.fetchResidentByCarReg(result.contents)
+                fetchResidentFromViewModel()
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+
+
 }
+
+
