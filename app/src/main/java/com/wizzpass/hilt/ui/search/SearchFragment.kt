@@ -323,6 +323,7 @@ class SearchFragment : Fragment() {
         val textView = dialogView.findViewById<View>(R.id.textView9) as TextView
         val button1 = dialogView.findViewById<View>(R.id.button) as Button
 
+        //reset
 
         scanQr = false
         button1.setOnClickListener { view ->
