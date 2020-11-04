@@ -48,6 +48,7 @@ class SearchFragment : Fragment() {
     var inputText: String? = ""
     var searchText: String? = ""
     var admin : Boolean = false
+    var scanQr : Boolean = false
     private var qrScan: IntentIntegrator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,18 +140,11 @@ class SearchFragment : Fragment() {
         }
 
         bt_scan.setOnClickListener {
+            scanQr = true
             qrScan = IntentIntegrator.forSupportFragment(this@SearchFragment)
             qrScan!!.setPrompt("scanning")
             qrScan!!.initiateScan()
-            /*val integrator = IntentIntegrator.forSupportFragment(this@SearchFragment)
-            integrator.setPrompt("Scan a barcode")
-            integrator.setCameraId(0) // Use a specific camera of the device
-            integrator.setOrientationLocked(true)
-            integrator.setBeepEnabled(true)
-            integrator.captureActivity = CaptureActivityPortrait::class.java
-            integrator.initiateScan()
 
-             */
         }
 
         if(registerViewModel.getAdminPrefs()){
@@ -225,26 +219,32 @@ class SearchFragment : Fragment() {
         registerViewModel.residentFound.observe(viewLifecycleOwner,
             Observer<Resident> {
                     t -> println("Received UserInfo2 List ${t}")
-                if(t==null){
-                        Log.d("halla", "hello")
-                    if(registerViewModel.getAdminPrefs()){
+
+
+                if(t==null) {
+                    Log.d("halla", "hello")
+                    if (scanQr) {
+                        showErrorDialog()
+                    }else{
+                    if (registerViewModel.getAdminPrefs()) {
                         launchRegisterResidentFragment(inputString, searchFieldUsed)
-                    }else {
+                    } else {
                         if (isVisitor) {
                             showErrorDialog()
                         } else {
                             launchSearchResultFragment(inputString, searchFieldUsed)
                         }
                     }
+                }
                 }else{
 
                     if(registerViewModel.getAdminPrefs()) {
-
                         launchRegisterResidentResidentData(t, searchFieldUsed)
                     }else{
                         if (isVisitor) {
                             launchVisitorDetailWithDataFragmentFound(t, inputText!!, searchText!!)
                         } else {
+
                             launchResultWithDataFragment(t, searchFieldUsed)
                         }
                     }
@@ -324,6 +324,7 @@ class SearchFragment : Fragment() {
         val button1 = dialogView.findViewById<View>(R.id.button) as Button
 
 
+        scanQr = false
         button1.setOnClickListener { view ->
 
             dialogBuilder.dismiss()
