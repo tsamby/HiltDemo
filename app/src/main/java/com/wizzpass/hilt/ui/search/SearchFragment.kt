@@ -3,6 +3,7 @@ package com.wizzpass.hilt.ui.search
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,6 +74,20 @@ class SearchFragment : Fragment() {
             searchText = arguments?.getString("searchField")
             admin = arguments?.getBoolean("admin", false)!!
         }
+
+        searchView!!.setFocusableInTouchMode(true)
+        searchView!!.requestFocus()
+        searchView!!.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (event.action === KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    return@OnKeyListener true
+                }
+            }
+            false
+        })
+
+
+
         return  searchView
     }
 
