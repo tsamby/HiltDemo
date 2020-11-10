@@ -565,6 +565,7 @@ private fun findSecondaryDriver(){
 
                if(t!=null){
 
+
                    if(secondaryDrivers){
                        launchRegisterSearchResultFragment(et_carReg.text.toString(),et_mobile.text.toString(), et_address.text.toString(),getEnteredResidentDetails())
                    }else if(additionalCars){

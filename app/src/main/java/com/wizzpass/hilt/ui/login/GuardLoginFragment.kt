@@ -89,6 +89,11 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
 
 
         }
+
+
+        resAddressViewModel.fetchSpecificAddressesData("Dover Avenue")
+        fetchSpecificAdressData()
+
     }
 
     fun getEnteredSearchDetails() : String {
@@ -125,6 +130,14 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
             supervisorId,
             "admin",
             "2306"
+        )
+    }
+
+    fun updateResidentAddress(resAddressId : Long) : ResAddress {
+        return ResAddress(
+            resAddressId,
+            "61",
+            "Stevens Avenue"
         )
     }
 
@@ -186,6 +199,17 @@ class GuardLoginFragment : Fragment(), LifecycleOwner {
 
             }
         )
+    }
+
+    private fun fetchSpecificAdressData(){
+        resAddressViewModel.specifAddrress.observe(viewLifecycleOwner,
+            Observer<ResAddress> {
+                    t -> println("Specific address ${t}")
+                if(t!=null){
+                    resAddressViewModel.updateResidentAddressData(updateResidentAddress(t.resAdrressId))
+                }
+
+            })
     }
 
 

@@ -3,6 +3,7 @@ package com.wizzpass.hilt.ui.register
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.wizzpass.hilt.data.local.db.entity.ResAddress
+import com.wizzpass.hilt.data.local.db.entity.Supervisor
 import com.wizzpass.hilt.data.local.db.repository.ResAddressDBRepository
 import kotlinx.coroutines.launch
 import java.util.ArrayList
@@ -19,6 +20,7 @@ public class ResAddressViewModel@ViewModelInject constructor(private val resAddr
     var residentFinalList:LiveData<MutableList<ResAddress>> = MutableLiveData<MutableList<ResAddress>>()
     var residentsLinkedToSameAddress : LiveData<MutableList<ResAddress>> = MutableLiveData<MutableList<ResAddress>>()
     var addressExists: LiveData<ResAddress> = MutableLiveData<ResAddress>()
+    var specifAddrress : LiveData<ResAddress> = MutableLiveData<ResAddress>()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun fetchAddressesData(){
@@ -73,6 +75,18 @@ public class ResAddressViewModel@ViewModelInject constructor(private val resAddr
         viewModelScope.launch {
             addressExists = resAddressDBRepository.fetchAddresse(address)
 
+        }
+    }
+
+    fun fetchSpecificAddressesData(address_street : String){
+        viewModelScope.launch {
+          specifAddrress = resAddressDBRepository.fetchSpecificAddress(address_street)
+        }
+    }
+
+    fun updateResidentAddressData(resAddress: ResAddress){
+        viewModelScope.launch {
+            resAddressDBRepository.updateResAddress(resAddress)
         }
     }
 
